@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1a1a1a">
+<title>Чекин BOODNEY — тест</title>
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    margin: 0; padding: 0; height: 100%;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #1a1a1a; color: #eee;
+    overscroll-behavior: none;
+  }
+  body { display: flex; flex-direction: column; min-height: 100vh; }
+
+  /* ── Login screen ─────────────────────────── */
+  #login {
+    flex: 1; display: flex; flex-direction: column; justify-content: center;
+    padding: 24px; gap: 16px;
+  }
+  #login h1 { margin: 0 0 8px; font-size: 24px; font-weight: 600; }
+  #login p  { margin: 0 0 16px; color: #999; font-size: 14px; }
+  #login input {
+    padding: 14px 16px; font-size: 16px; border-radius: 8px;
+    border: 1px solid #444; background: #2a2a2a; color: #eee;
+    width: 100%;
+  }
+  #login button {
+    padding: 14px; font-size: 16px; font-weight: 600;
+    border-radius: 8px; border: none; background: #1a73e8; color: white;
+    cursor: pointer;
+  }
+  #login button:disabled { background: #555; cursor: wait; }
+  #login .error { color: #e57373; font-size: 14px; min-height: 18px; }
+
+  /* ── Scanner screen ───────────────────────── */
+  #app { display: none; flex: 1; flex-direction: column; }
+  #app.active { display: flex; }
+
+  header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 16px; background: #111; border-bottom: 1px solid #2a2a2a;
+    font-size: 14px;
+  }
+  header .stats { color: #999; }
+  header .stats b { color: #eee; }
+  header button {
+    background: none; border: 1px solid #444; color: #ccc;
+    padding: 6px 12px; border-radius: 6px; font-size: 13px; cursor: pointer;
+  }
+
+  #reader {
+    width: 100%; background: #000; position: relative;
+    min-height: 300px; flex: 1;
+  }
+  #reader video { width: 100% !important; height: auto !important; display: block; }
+  #reader img[alt="Info icon"] { display: none; } /* убираем иконку html5-qrcode */
+
+  /* Выбор камеры — выпадашка под видео */
+  #cameraSelect {
+    padding: 8px 12px; background: #222; color: #ccc;
+    border: 1px solid #333; border-radius: 6px; font-size: 13px;
+    margin: 8px 16px 0; max-width: calc(100% - 32px);
+  }
+
+  /* Индикатор активности сканера */
+  #scanStatus {
+    padding: 6px 16px; font-size: 12px; color: #888;
+    display: flex; align-items: center; gap: 6px;
+  }
+  #scanStatus::before {
+    content: ''; width: 8px; height: 8px; border-radius: 50%;
+    background: #4caf50; animation: pulse 1.5s infinite;
+  }
+  #scanStatus.error::before { background: #e57373; animation: none; }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.3; }
+  }
+
+  #manual {
+    padding: 12px 16px; background: #111;
+    display: flex; gap: 8px; align-items: center;
+  }
+  #manual input {
+    flex: 1; padding: 10px 12px; font-size: 16px; border-radius: 6px;
+    border: 1px solid #333; background: #222; color: #eee;
+  }
+  #manual button {
+    padding: 10px 16px; background: #2a2a2a; color: #eee;
+    border: 1px solid #444; border-radius: 6px; font-size: 14px; cursor: pointer;
+  }
+
+  /* ── Result overlay ───────────────────────── */
+  #result {
+    position: fixed; inset: 0; display: none;
+    flex-direction: column; align-items: center; justify-content: center;
+    padding: 24px; text-align: center;
+    z-index: 100; transition: opacity 0.15s ease-out;
+  }
+  #result.show { display: flex; }
+  #result.ok    { background: #1b5e20; }
+  #result.err   { background: #b71c1c; }
+  #result.warn  { background: #e65100; }
+
+  #result .icon  { font-size: 80px; margin-bottom: 12px; line-height: 1; }
+  #result .title { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+  #result .sub   { font-size: 18px; opacity: 0.9; margin-bottom: 4px; max-width: 90%; }
+  #result .meta  { font-size: 14px; opacity: 0.7; margin-top: 8px; }
+  #result .actions { margin-top: 24px; display: flex; gap: 12px; }
+  #result button {
+    padding: 10px 20px; font-size: 14px; border-radius: 6px;
+    border: 1px solid rgba(255,255,255,0.3); background: rgba(0,0,0,0.2);
+    color: white; cursor: pointer;
+  }
+
+  /* ── Toast (для мелких сообщений) ─────────── */
+  #toast {
+    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+    background: #333; color: #eee; padding: 10px 16px; border-radius: 6px;
+    font-size: 14px; opacity: 0; transition: opacity 0.2s; pointer-events: none;
+    z-index: 200; max-width: 80%;
+  }
+  #toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+
+<!-- ── Login ────────────────────────────────── -->
+<div id="login">
+  <h1>🎫 Чекин билетов</h1>
+  <p>Тестовая площадка</p>
+  <input type="url" id="apiUrl" placeholder="URL Apps Script Web App" autocomplete="off">
+  <input type="password" id="pwd" placeholder="Пароль" autocomplete="current-password">
+  <button id="loginBtn">Войти</button>
+  <div class="error" id="loginError"></div>
+</div>
+
+<!-- ── Scanner ──────────────────────────────── -->
+<div id="app">
+  <header>
+    <div class="stats">
+      Пришло: <b id="checkedCount">0</b> / <b id="totalCount">0</b>
+      <span id="pending" style="margin-left: 8px; color: #ffa726;"></span>
+    </div>
+    <button id="logoutBtn">Выйти</button>
+  </header>
+
+  <div id="reader"></div>
+  <select id="cameraSelect" style="display: none;"></select>
+  <div id="scanStatus">Сканирование…</div>
+
+  <div id="manual">
+    <input type="text" id="manualCode" inputmode="numeric" placeholder="Ввести код вручную">
+    <button id="manualBtn">OK</button>
+  </div>
+</div>
+
+<!-- ── Result overlay ──────────────────────── -->
+<div id="result">
+  <div class="icon" id="resultIcon"></div>
+  <div class="title" id="resultTitle"></div>
+  <div class="sub" id="resultSub"></div>
+  <div class="meta" id="resultMeta"></div>
+  <div class="actions" id="resultActions"></div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+'use strict';
+
+/* ── Состояние ─────────────────────────────── */
+const state = {
+  apiUrl: localStorage.getItem('apiUrl') || '',
+  password: localStorage.getItem('password') || '',
+  deviceId: localStorage.getItem('deviceId') || ('dev-' + Math.random().toString(36).slice(2, 8)),
+  tickets: new Map(),       // short/full → ticket
+  checkedLocal: new Set(),  // коды, чекинутые в этой сессии (для офлайн)
+  pendingCheckins: [],      // очередь для офлайн-синка
+  lastCheckedCode: null,    // для undo
+  scanner: null,
+  scanningPaused: false,
+  total: 0,
+  checked: 0,
+};
+localStorage.setItem('deviceId', state.deviceId);
+
+/* ── DOM ──────────────────────────────────── */
+const $ = id => document.getElementById(id);
+
+/* ── API helpers ───────────────────────────── */
+async function api(action, extra = {}) {
+  const params = new URLSearchParams({
+    action,
+    password: state.password,
+    device: state.deviceId,
+    ...extra,
+  });
+  const res = await fetch(state.apiUrl + '?' + params.toString(), {
+    method: 'GET',
+    redirect: 'follow',
+  });
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  return res.json();
+}
+
+/* ── Login ─────────────────────────────────── */
+$('apiUrl').value = state.apiUrl;
+$('pwd').value    = state.password;
+
+$('loginBtn').addEventListener('click', login);
+$('pwd').addEventListener('keydown', e => { if (e.key === 'Enter') login(); });
+
+async function login() {
+  const url = $('apiUrl').value.trim();
+  const pwd = $('pwd').value;
+  if (!url || !pwd) {
+    $('loginError').textContent = 'Заполни оба поля';
+    return;
+  }
+  $('loginBtn').disabled = true;
+  $('loginError').textContent = '';
+
+  state.apiUrl = url;
+  state.password = pwd;
+
+  try {
+    const r = await api('list');
+    if (!r.ok) throw new Error(r.error || 'Ошибка сервера');
+    localStorage.setItem('apiUrl', url);
+    localStorage.setItem('password', pwd);
+    loadTickets(r.tickets);
+    showScanner();
+  } catch (err) {
+    $('loginError').textContent = err.message;
+  } finally {
+    $('loginBtn').disabled = false;
+  }
+}
+
+$('logoutBtn').addEventListener('click', () => {
+  if (state.pendingCheckins.length > 0) {
+    if (!confirm('Есть несинхронизированные чекины. Выйти всё равно?')) return;
+  }
+  localStorage.removeItem('password');
+  location.reload();
+});
+
+/* ── Загрузка билетов ──────────────────────── */
+function loadTickets(tickets) {
+  state.tickets.clear();
+  state.checkedLocal.clear();
+  state.total = tickets.length;
+  state.checked = 0;
+  for (const t of tickets) {
+    state.tickets.set(t.full, t);
+    state.tickets.set(t.short, t);
+    if (t.checked) {
+      state.checked++;
+      state.checkedLocal.add(t.full);
+      state.checkedLocal.add(t.short);
+    }
+  }
+  updateStats();
+}
+
+function updateStats() {
+  $('checkedCount').textContent = state.checked;
+  $('totalCount').textContent = state.total;
+  $('pending').textContent = state.pendingCheckins.length > 0
+    ? `(в очереди: ${state.pendingCheckins.length})` : '';
+}
+
+/* ── Scanner ───────────────────────────────── */
+function showScanner() {
+  $('login').style.display = 'none';
+  $('app').classList.add('active');
+  initCameras();
+}
+
+async function initCameras() {
+  try {
+    // Запрашиваем разрешение на камеру явно, чтобы getCameras вернул labels
+    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    stream.getTracks().forEach(t => t.stop()); // сразу отпускаем — html5-qrcode откроет свою
+
+    const cameras = await Html5Qrcode.getCameras();
+    if (!cameras || cameras.length === 0) {
+      setStatus('Камера не найдена', true);
+      return;
+    }
+
+    const select = $('cameraSelect');
+    select.innerHTML = '';
+    cameras.forEach((cam, i) => {
+      const opt = document.createElement('option');
+      opt.value = cam.id;
+      opt.textContent = cam.label || `Камера ${i + 1}`;
+      select.appendChild(opt);
+    });
+
+    // Восстанавливаем последнюю выбранную или берём заднюю / последнюю
+    // (на телефонах задняя камера обычно последняя в списке)
+    const savedId = localStorage.getItem('cameraId');
+    if (savedId && cameras.find(c => c.id === savedId)) {
+      select.value = savedId;
+    } else {
+      const back = cameras.find(c => /back|rear|environment/i.test(c.label));
+      select.value = back ? back.id : cameras[cameras.length - 1].id;
+    }
+    if (cameras.length > 1) select.style.display = 'block';
+
+    select.addEventListener('change', async () => {
+      localStorage.setItem('cameraId', select.value);
+      await startScanner(select.value);
+    });
+
+    await startScanner(select.value);
+  } catch (err) {
+    setStatus('Ошибка камеры: ' + (err.message || err), true);
+  }
+}
+
+async function startScanner(cameraId) {
+  if (state.scanner) {
+    try { await state.scanner.stop(); } catch (_) {}
+    state.scanner = null;
+  }
+  state.scanner = new Html5Qrcode('reader', { verbose: false });
+
+  // Адаптивный qrbox: 70% от меньшей стороны вьюпорта камеры.
+  // Передаём функцию — библиотека вызовет её с реальными размерами видео.
+  const qrboxFn = (viewW, viewH) => {
+    const minEdge = Math.min(viewW, viewH);
+    const size = Math.floor(minEdge * 0.7);
+    return { width: size, height: size };
+  };
+
+  try {
+    await state.scanner.start(
+      cameraId,
+      {
+        fps: 25,
+        qrbox: qrboxFn,
+        aspectRatio: 1.7777778,        // 16:9 — естественно для большинства камер
+        disableFlip: false,             // распознаём зеркально отражённые QR тоже
+        videoConstraints: {
+          deviceId: { exact: cameraId },
+          width:  { ideal: 1280 },
+          height: { ideal: 720 },
+          focusMode: 'continuous',
+        },
+      },
+      onScan,
+      () => {} // ignore decode errors per frame
+    );
+    setStatus('Сканирование…');
+  } catch (err) {
+    setStatus('Не удалось запустить камеру: ' + (err.message || err), true);
+  }
+}
+
+function setStatus(text, isError) {
+  const el = $('scanStatus');
+  el.textContent = text;
+  el.classList.toggle('error', !!isError);
+}
+
+function onScan(decodedText) {
+  if (state.scanningPaused) return;
+  state.scanningPaused = true;
+  handleCode(decodedText);
+}
+
+/* Ручной ввод */
+$('manualBtn').addEventListener('click', () => {
+  const code = $('manualCode').value.trim();
+  if (!code) return;
+  $('manualCode').value = '';
+  handleCode(code);
+});
+$('manualCode').addEventListener('keydown', e => {
+  if (e.key === 'Enter') $('manualBtn').click();
+});
+
+/* ── Обработка кода ────────────────────────── */
+async function handleCode(rawCode) {
+  const code = String(rawCode).replace(/[^0-9]/g, '');
+  if (!code) {
+    showResult('err', '❌', 'Не код', 'В QR нет цифр');
+    return;
+  }
+
+  // Локальная проверка по кэшу — мгновенный фидбэк
+  const ticket = state.tickets.get(code);
+
+  if (!ticket) {
+    showResult('err', '❌', 'Не найден', `Код: ${code}`);
+    return;
+  }
+
+  // Уже чекнут? (включая чекины этой сессии)
+  if (state.checkedLocal.has(code) || ticket.checked) {
+    showResult('warn', '⚠️', 'Уже использован',
+      ticket.email || ticket.comment || '',
+      ticket.checkedAt ? 'Чекин в ' + formatTime(ticket.checkedAt) : '');
+    return;
+  }
+
+  // Оптимистично чекиним локально — серверу отправим параллельно
+  state.checkedLocal.add(ticket.full);
+  state.checkedLocal.add(ticket.short);
+  ticket.checked = true;
+  ticket.checkedAt = new Date().toISOString();
+  state.checked++;
+  state.lastCheckedCode = code;
+  updateStats();
+
+  showResult('ok', '✓', ticket.email || 'Билет ' + ticket.short,
+    ticket.comment || '',
+    '#' + ticket.short, true);
+
+  // Отправляем на сервер
+  try {
+    const r = await api('checkin', { code });
+    if (!r.ok && r.error === 'already_checked') {
+      // Кто-то уже чекинил с другого устройства — это ок, состояние сошлось
+    } else if (!r.ok) {
+      throw new Error(r.error);
+    }
+  } catch (err) {
+    state.pendingCheckins.push({ code, ts: Date.now() });
+    savePending();
+    updateStats();
+    toast('Сохранено локально, синк позже');
+  }
+}
+
+/* ── Result overlay ────────────────────────── */
+function showResult(type, icon, title, sub = '', meta = '', allowUndo = false) {
+  const el = $('result');
+  el.className = 'show ' + type;
+  $('resultIcon').textContent = icon;
+  $('resultTitle').textContent = title;
+  $('resultSub').textContent = sub;
+  $('resultMeta').textContent = meta;
+
+  const actions = $('resultActions');
+  actions.innerHTML = '';
+  if (allowUndo && state.lastCheckedCode) {
+    const undoBtn = document.createElement('button');
+    undoBtn.textContent = '↩ Отменить';
+    undoBtn.addEventListener('click', undoLast);
+    actions.appendChild(undoBtn);
+  }
+  const okBtn = document.createElement('button');
+  okBtn.textContent = 'Далее';
+  okBtn.addEventListener('click', closeResult);
+  actions.appendChild(okBtn);
+
+  beep(type);
+  vibrate(type);
+
+  // Автозакрытие через 2 сек для ok, 3 сек для остальных
+  clearTimeout(showResult._t);
+  showResult._t = setTimeout(closeResult, type === 'ok' ? 2000 : 3000);
+}
+
+function closeResult() {
+  clearTimeout(showResult._t);
+  $('result').classList.remove('show');
+  state.scanningPaused = false;
+}
+
+async function undoLast() {
+  if (!state.lastCheckedCode) return;
+  const code = state.lastCheckedCode;
+  const ticket = state.tickets.get(code);
+  if (ticket) {
+    state.checkedLocal.delete(ticket.full);
+    state.checkedLocal.delete(ticket.short);
+    ticket.checked = false;
+    ticket.checkedAt = null;
+    state.checked = Math.max(0, state.checked - 1);
+  }
+  state.lastCheckedCode = null;
+  updateStats();
+  closeResult();
+  toast('Отменено');
+  try {
+    await api('undo', { code });
+  } catch (err) {
+    toast('Сервер не ответил — синк позже');
+  }
+}
+
+/* ── Звук / вибро ──────────────────────────── */
+let audioCtx = null;
+function beep(type) {
+  try {
+    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    osc.frequency.value = type === 'ok' ? 880 : type === 'warn' ? 440 : 220;
+    gain.gain.value = 0.1;
+    osc.start();
+    setTimeout(() => osc.stop(), type === 'ok' ? 120 : 250);
+  } catch (_) {}
+}
+function vibrate(type) {
+  if (!navigator.vibrate) return;
+  navigator.vibrate(type === 'ok' ? 80 : [80, 60, 80]);
+}
+
+/* ── Toast ────────────────────────────────── */
+function toast(msg) {
+  const el = $('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => el.classList.remove('show'), 2500);
+}
+
+/* ── Pending sync ─────────────────────────── */
+function savePending() {
+  localStorage.setItem('pending', JSON.stringify(state.pendingCheckins));
+}
+function loadPending() {
+  try {
+    state.pendingCheckins = JSON.parse(localStorage.getItem('pending') || '[]');
+  } catch (_) { state.pendingCheckins = []; }
+}
+async function flushPending() {
+  if (state.pendingCheckins.length === 0) return;
+  if (!navigator.onLine) return;
+  const queue = [...state.pendingCheckins];
+  for (const item of queue) {
+    try {
+      await api('checkin', { code: item.code });
+      state.pendingCheckins = state.pendingCheckins.filter(x => x !== item);
+      savePending();
+      updateStats();
+    } catch (_) {
+      return; // не получилось — попробуем позже
+    }
+  }
+  if (queue.length > 0) toast('Очередь засинкана');
+}
+loadPending();
+setInterval(flushPending, 15000);
+window.addEventListener('online', flushPending);
+
+/* ── Утилиты ──────────────────────────────── */
+function formatTime(iso) {
+  try {
+    const d = new Date(iso);
+    return d.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+  } catch (_) { return iso; }
+}
+
+/* Автологин если данные есть */
+if (state.apiUrl && state.password) {
+  // Не делаем автоматически — пусть нажмёт кнопку, чтобы получить запрос камеры
+  // в ответ на user gesture (иначе iOS Safari не даст).
+}
+</script>
+</body>
+</html>
