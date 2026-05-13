@@ -40,6 +40,8 @@
   #app { display: none; flex: 1; flex-direction: column; }
   #app.active { display: flex; }
 
+  .screen { flex: 1; display: flex; flex-direction: column; }
+
   header {
     display: flex; justify-content: space-between; align-items: center;
     padding: 12px 16px; background: #111; border-bottom: 1px solid #2a2a2a;
@@ -52,21 +54,61 @@
     padding: 6px 12px; border-radius: 6px; font-size: 13px; cursor: pointer;
   }
 
+  /* ── Home screen ──────────────────────────── */
+  #home { padding: 24px 20px; gap: 24px; justify-content: center; }
+
+  .big-btn {
+    padding: 20px; font-size: 18px; font-weight: 600;
+    background: #1a73e8; color: white; border: none; border-radius: 10px;
+    cursor: pointer; width: 100%;
+  }
+  .big-btn:active { background: #1557b0; }
+
+  .divider {
+    display: flex; align-items: center; gap: 12px;
+    color: #555; font-size: 13px;
+  }
+  .divider::before, .divider::after {
+    content: ''; flex: 1; height: 1px; background: #333;
+  }
+
+  #manual label {
+    display: block; font-size: 14px; color: #999; margin-bottom: 8px;
+  }
+  .manual-row { display: flex; gap: 8px; }
+  #manual input {
+    flex: 1; padding: 14px; font-size: 18px; border-radius: 8px;
+    border: 1px solid #444; background: #2a2a2a; color: #eee;
+    letter-spacing: 4px; text-align: center;
+  }
+  #manual input:focus { outline: none; border-color: #1a73e8; }
+  #manual button {
+    padding: 14px 20px; background: #2a2a2a; color: #eee;
+    border: 1px solid #444; border-radius: 8px;
+    font-size: 15px; cursor: pointer; font-weight: 500;
+  }
+
+  /* ── Scan screen ──────────────────────────── */
   #reader {
     width: 100%; background: #000; position: relative;
     min-height: 300px; flex: 1;
   }
   #reader video { width: 100% !important; height: auto !important; display: block; }
-  #reader img[alt="Info icon"] { display: none; } /* убираем иконку html5-qrcode */
+  #reader img[alt="Info icon"] { display: none; }
 
-  /* Выбор камеры — выпадашка под видео */
+  #cameraRow {
+    display: flex; gap: 8px; padding: 8px 16px 0;
+  }
   #cameraSelect {
-    padding: 8px 12px; background: #222; color: #ccc;
+    flex: 1; padding: 8px 12px; background: #222; color: #ccc;
     border: 1px solid #333; border-radius: 6px; font-size: 13px;
-    margin: 8px 16px 0; max-width: calc(100% - 32px);
+    min-width: 0;
+  }
+  #refreshCams {
+    padding: 8px 12px; background: #2a2a2a; color: #eee;
+    border: 1px solid #444; border-radius: 6px; font-size: 14px; cursor: pointer;
   }
 
-  /* Индикатор активности сканера */
   #scanStatus {
     padding: 6px 16px; font-size: 12px; color: #888;
     display: flex; align-items: center; gap: 6px;
@@ -81,17 +123,11 @@
     50%      { opacity: 0.3; }
   }
 
-  #manual {
-    padding: 12px 16px; background: #111;
-    display: flex; gap: 8px; align-items: center;
-  }
-  #manual input {
-    flex: 1; padding: 10px 12px; font-size: 16px; border-radius: 6px;
-    border: 1px solid #333; background: #222; color: #eee;
-  }
-  #manual button {
-    padding: 10px 16px; background: #2a2a2a; color: #eee;
-    border: 1px solid #444; border-radius: 6px; font-size: 14px; cursor: pointer;
+  .scan-actions { padding: 12px 16px; }
+  .secondary-btn {
+    width: 100%; padding: 12px; font-size: 15px;
+    background: #2a2a2a; color: #eee; border: 1px solid #444;
+    border-radius: 8px; cursor: pointer;
   }
 
   /* ── Result overlay ───────────────────────── */
@@ -139,7 +175,7 @@
   <div class="error" id="loginError"></div>
 </div>
 
-<!-- ── Scanner ──────────────────────────────── -->
+<!-- ── Main app (после логина) ──────────────── -->
 <div id="app">
   <header>
     <div class="stats">
@@ -149,13 +185,33 @@
     <button id="logoutBtn">Выйти</button>
   </header>
 
-  <div id="reader"></div>
-  <select id="cameraSelect" style="display: none;"></select>
-  <div id="scanStatus">Сканирование…</div>
+  <!-- Главный экран — кнопка скана + ручной ввод -->
+  <div id="home" class="screen">
+    <button id="scanBtn" class="big-btn">📷 Сканировать билет</button>
 
-  <div id="manual">
-    <input type="text" id="manualCode" inputmode="numeric" placeholder="Ввести код вручную">
-    <button id="manualBtn">OK</button>
+    <div class="divider"><span>или</span></div>
+
+    <div id="manual">
+      <label for="manualCode">Ввести 4 цифры билета</label>
+      <div class="manual-row">
+        <input type="text" id="manualCode" inputmode="numeric" pattern="[0-9]*"
+               maxlength="16" placeholder="1234" autocomplete="off">
+        <button id="manualBtn">Проверить</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Экран сканирования -->
+  <div id="scanScreen" class="screen" style="display: none;">
+    <div id="reader"></div>
+    <div id="cameraRow">
+      <select id="cameraSelect"></select>
+      <button id="refreshCams" title="Обновить список камер">🔄</button>
+    </div>
+    <div id="scanStatus">Сканирование…</div>
+    <div class="scan-actions">
+      <button id="cancelScanBtn" class="secondary-btn">Отмена</button>
+    </div>
   </div>
 </div>
 
@@ -234,7 +290,7 @@ async function login() {
     localStorage.setItem('apiUrl', url);
     localStorage.setItem('password', pwd);
     loadTickets(r.tickets);
-    showScanner();
+    showApp();
   } catch (err) {
     $('loginError').textContent = err.message;
   } finally {
@@ -275,13 +331,40 @@ function updateStats() {
     ? `(в очереди: ${state.pendingCheckins.length})` : '';
 }
 
-/* ── Scanner ───────────────────────────────── */
-function showScanner() {
+/* ── Управление экранами ───────────────────── */
+function showApp() {
   $('login').style.display = 'none';
   $('app').classList.add('active');
-  initCameras();
+  showHome();
 }
 
+function showHome() {
+  $('home').style.display = 'flex';
+  $('scanScreen').style.display = 'none';
+  // Гасим камеру при возврате на главный экран
+  stopScanner();
+  // Фокус на поле ручного ввода — удобно если предыдущий чекин был ручной
+  // (но не на iOS, там фокус откроет клавиатуру что не всегда нужно)
+}
+
+async function showScanScreen() {
+  $('home').style.display = 'none';
+  $('scanScreen').style.display = 'flex';
+  await initCameras();
+}
+
+$('scanBtn').addEventListener('click', showScanScreen);
+$('cancelScanBtn').addEventListener('click', showHome);
+
+async function stopScanner() {
+  if (state.scanner) {
+    try { await state.scanner.stop(); } catch (_) {}
+    try { state.scanner.clear(); } catch (_) {}
+    state.scanner = null;
+  }
+}
+
+/* ── Camera setup ──────────────────────────── */
 async function initCameras() {
   try {
     // Запрашиваем разрешение на камеру явно, чтобы getCameras вернул labels
@@ -314,10 +397,11 @@ async function initCameras() {
     }
     if (cameras.length > 1) select.style.display = 'block';
 
-    select.addEventListener('change', async () => {
+    // Меняем обработчик на onchange прямо на элементе (чтобы не множить listeners)
+    select.onchange = async () => {
       localStorage.setItem('cameraId', select.value);
       await startScanner(select.value);
-    });
+    };
 
     await startScanner(select.value);
   } catch (err) {
@@ -326,14 +410,11 @@ async function initCameras() {
 }
 
 async function startScanner(cameraId) {
-  if (state.scanner) {
-    try { await state.scanner.stop(); } catch (_) {}
-    state.scanner = null;
-  }
+  await stopScanner();
   state.scanner = new Html5Qrcode('reader', { verbose: false });
+  state.scanningPaused = false;
 
   // Адаптивный qrbox: 70% от меньшей стороны вьюпорта камеры.
-  // Передаём функцию — библиотека вызовет её с реальными размерами видео.
   const qrboxFn = (viewW, viewH) => {
     const minEdge = Math.min(viewW, viewH);
     const size = Math.floor(minEdge * 0.7);
@@ -346,8 +427,8 @@ async function startScanner(cameraId) {
       {
         fps: 25,
         qrbox: qrboxFn,
-        aspectRatio: 1.7777778,        // 16:9 — естественно для большинства камер
-        disableFlip: false,             // распознаём зеркально отражённые QR тоже
+        aspectRatio: 1.7777778,        // 16:9
+        disableFlip: false,
         videoConstraints: {
           deviceId: { exact: cameraId },
           width:  { ideal: 1280 },
@@ -358,7 +439,7 @@ async function startScanner(cameraId) {
       onScan,
       () => {} // ignore decode errors per frame
     );
-    setStatus('Сканирование…');
+    setStatus('Наведите камеру на QR-код');
   } catch (err) {
     setStatus('Не удалось запустить камеру: ' + (err.message || err), true);
   }
@@ -370,13 +451,17 @@ function setStatus(text, isError) {
   el.classList.toggle('error', !!isError);
 }
 
-function onScan(decodedText) {
+async function onScan(decodedText) {
   if (state.scanningPaused) return;
   state.scanningPaused = true;
+  // Сразу гасим камеру — больше сегодня не понадобится, обработка билета
+  // дальше происходит без видео-потока. Это экономит батарею и убирает
+  // риск повторного срабатывания на тот же или соседний QR.
+  await stopScanner();
   handleCode(decodedText);
 }
 
-/* Ручной ввод */
+/* Ручной ввод (на главном экране) */
 $('manualBtn').addEventListener('click', () => {
   const code = $('manualCode').value.trim();
   if (!code) return;
@@ -453,27 +538,25 @@ function showResult(type, icon, title, sub = '', meta = '', allowUndo = false) {
   actions.innerHTML = '';
   if (allowUndo && state.lastCheckedCode) {
     const undoBtn = document.createElement('button');
-    undoBtn.textContent = '↩ Отменить';
+    undoBtn.textContent = '↩ Отменить чекин';
     undoBtn.addEventListener('click', undoLast);
     actions.appendChild(undoBtn);
   }
   const okBtn = document.createElement('button');
-  okBtn.textContent = 'Далее';
+  okBtn.textContent = 'Готово';
   okBtn.addEventListener('click', closeResult);
   actions.appendChild(okBtn);
 
   beep(type);
   vibrate(type);
-
-  // Автозакрытие через 2 сек для ok, 3 сек для остальных
-  clearTimeout(showResult._t);
-  showResult._t = setTimeout(closeResult, type === 'ok' ? 2000 : 3000);
+  // НЕТ автозакрытия — пользователь сам закроет, когда увидит результат.
 }
 
 function closeResult() {
-  clearTimeout(showResult._t);
   $('result').classList.remove('show');
-  state.scanningPaused = false;
+  // После закрытия результата возвращаемся на главный экран.
+  // Камера к этому моменту уже остановлена (мы её гасим сразу после скана).
+  showHome();
 }
 
 async function undoLast() {
