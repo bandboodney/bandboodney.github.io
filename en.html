@@ -46,7 +46,8 @@
         <h2>Tickets</h2>
         <div class="price">20&thinsp;€</div>
       </div>
-      <p>Send via PayPal (for «Friends & Family») to <a class="email-paypal" href="mailto:bandboodney@gmail.com">bandboodney@gmail.com</a>.</p>
+      <button type="button" class="order-btn" data-open-order>Order tickets</button>
+      <p>Or send via PayPal (for «Friends & Family») to <a class="email-paypal" href="mailto:bandboodney@gmail.com">bandboodney@gmail.com</a>.</p>
       <p>In the payment note, please include your email - your ticket will arrive there within one day.</p>
       <p>For any questions, write to <a class="email" href="mailto:bandboodney@gmail.com">bandboodney@gmail.com</a>.</p>
     </div>
@@ -72,6 +73,43 @@
   </div>
   <div class="meta">© 2026 Band Boodney · München · <a class="impressum" href="impressum.html">Impressum</a></div>
 </footer>
+
+<div class="modal-backdrop" id="orderModal" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="orderModalTitle">
+  <div class="modal" role="document">
+    <button type="button" class="modal-close" aria-label="Close">&times;</button>
+    <h3 id="orderModalTitle">Order tickets</h3>
+    <form class="order-form" novalidate>
+      <label class="field">
+        <span class="field-label">Email</span>
+        <input type="email" name="email" required autocomplete="email" placeholder="you@example.com" />
+      </label>
+      <label class="field">
+        <span class="field-label">Number of tickets</span>
+        <input type="number" name="tickets" required min="1" max="10" step="1" value="1" inputmode="numeric" />
+      </label>
+      <input type="text" name="website" tabindex="-1" autocomplete="off" class="honeypot" aria-hidden="true" />
+      <div class="modal-error" role="alert" hidden></div>
+      <div class="modal-success" role="status" hidden></div>
+      <div class="modal-actions">
+        <button type="submit" class="modal-submit">Request</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  window.OrderLang = 'en';
+  window.OrderI18n = {
+    sending: 'Sending...',
+    sent: 'Sent',
+    success: 'Thanks! Your request has been received. A PayPal invoice will arrive at your email shortly.',
+    errInvalidEmail: 'Please enter a valid email',
+    errInvalidTickets: 'Number of tickets must be 1-10',
+    errTooMany: 'Too many requests. Please try again in a minute.',
+    errServer: 'Something went wrong. Please try again or email us.',
+  };
+</script>
+<script src="order.js" defer></script>
 
 </body>
 </html>

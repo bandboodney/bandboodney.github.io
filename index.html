@@ -46,7 +46,8 @@
         <h2>Билеты</h2>
         <div class="price">20&thinsp;€</div>
       </div>
-      <p>Перевод через PayPal (для «Friends and Family») на <a class="email-paypal" href="mailto:bandboodney@gmail.com">bandboodney@gmail.com</a>.
+      <button type="button" class="order-btn" data-open-order>Заказать билеты</button>
+      <p>Или переведите через PayPal (для «Friends and Family») на <a class="email-paypal" href="mailto:bandboodney@gmail.com">bandboodney@gmail.com</a>.
       <p>В комментарии к платежу укажите адрес своей почты - билет придёт туда в течение одного дня.</p>
       <p>По всем вопросам пишите на <a class="email" href="mailto:bandboodney@gmail.com">bandboodney@gmail.com</a>.</p>
     </div>
@@ -72,6 +73,43 @@
   </div>
   <div class="meta">© 2026 Band Boodney · München · <a class="impressum" href="impressum.html">Impressum</a></div>
 </footer>
+
+<div class="modal-backdrop" id="orderModal" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="orderModalTitle">
+  <div class="modal" role="document">
+    <button type="button" class="modal-close" aria-label="Закрыть">&times;</button>
+    <h3 id="orderModalTitle">Заказ билетов</h3>
+    <form class="order-form" novalidate>
+      <label class="field">
+        <span class="field-label">Email</span>
+        <input type="email" name="email" required autocomplete="email" placeholder="you@example.com" />
+      </label>
+      <label class="field">
+        <span class="field-label">Количество билетов</span>
+        <input type="number" name="tickets" required min="1" max="10" step="1" value="1" inputmode="numeric" />
+      </label>
+      <input type="text" name="website" tabindex="-1" autocomplete="off" class="honeypot" aria-hidden="true" />
+      <div class="modal-error" role="alert" hidden></div>
+      <div class="modal-success" role="status" hidden></div>
+      <div class="modal-actions">
+        <button type="submit" class="modal-submit">Запросить</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  window.OrderLang = 'ru';
+  window.OrderI18n = {
+    sending: 'Отправка...',
+    sent: 'Отправлено',
+    success: 'Спасибо! Запрос получен. Счёт PayPal придёт на указанный email в ближайшее время.',
+    errInvalidEmail: 'Введите корректный email',
+    errInvalidTickets: 'Количество билетов должно быть от 1 до 10',
+    errTooMany: 'Слишком много запросов. Попробуйте через минуту.',
+    errServer: 'Что-то пошло не так. Попробуйте ещё раз или напишите нам на email.',
+  };
+</script>
+<script src="order.js" defer></script>
 
 </body>
 </html>
