@@ -4,9 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Band Boodney - July 4, 2026, München</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/fonts/fonts.css" />
 <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -71,7 +69,7 @@
     <br>Band «Boodney» is not a commercial organization.
     <br>Personal data is not collected or processed.</p>
   </div>
-  <div class="meta">© 2026 Band Boodney · München · <a class="impressum" href="impressum.html">Impressum</a></div>
+  <div class="meta">© 2026 Band Boodney · München · <a class="impressum" href="impressum.html">Impressum</a> · <a class="impressum" href="datenschutz.html">Datenschutz</a></div>
 </footer>
 
 <div class="modal-backdrop" id="orderModal" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="orderModalTitle">
@@ -88,6 +86,10 @@
         <input type="number" name="tickets" required min="1" max="10" step="1" value="1" inputmode="numeric" />
       </label>
       <input type="text" name="website" tabindex="-1" autocomplete="off" class="honeypot" aria-hidden="true" />
+      <label class="modal-consent">
+        <input type="checkbox" name="consent" required />
+        <span>By submitting, I consent to the processing of my data in accordance with the <a href="datenschutz.html">privacy policy</a>.</span>
+      </label>
       <div class="modal-error" role="alert" hidden></div>
       <div class="modal-success" role="status" hidden></div>
       <div class="modal-actions">
@@ -107,6 +109,7 @@
     errInvalidTickets: 'Number of tickets must be 1-10',
     errTooMany: 'Too many requests. Please try again in a minute.',
     errServer: 'Something went wrong. Please try again or email us.',
+    errConsent: 'Please confirm your consent to the privacy policy.',
   };
 </script>
 <script src="order.js" defer></script>

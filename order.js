@@ -21,6 +21,7 @@
   const emailInput = form.querySelector('input[name="email"]');
   const ticketsInput = form.querySelector('input[name="tickets"]');
   const honeypot = form.querySelector('input[name="website"]');
+  const consentInput = form.querySelector('input[name="consent"]');
 
   let lastSubmitAt = 0;
 
@@ -101,6 +102,11 @@
     if (!Number.isInteger(tickets) || tickets < 1 || tickets > 10) {
       showError(i18n.errInvalidTickets || 'Invalid tickets count (1-10)');
       ticketsInput.focus();
+      return;
+    }
+    if (consentInput && !consentInput.checked) {
+      showError(i18n.errConsent || 'Please confirm your consent to the privacy policy.');
+      consentInput.focus();
       return;
     }
 

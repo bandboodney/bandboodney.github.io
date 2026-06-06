@@ -312,6 +312,29 @@ h1 .year {
   border: 1px solid rgba(80, 200, 120, 0.3);
 }
 
+.modal-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--muted);
+  cursor: pointer;
+}
+.modal-consent input[type="checkbox"] {
+  margin-top: 2px;
+  flex-shrink: 0;
+  accent-color: var(--fg);
+  width: 16px;
+  height: 16px;
+}
+.modal-consent a {
+  color: var(--fg);
+  border-bottom: 1px solid var(--line-strong);
+  transition: border-color 0.15s ease;
+}
+.modal-consent a:hover { border-color: var(--fg); }
+
 .modal-actions {
   display: flex;
   justify-content: center;

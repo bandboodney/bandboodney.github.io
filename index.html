@@ -4,9 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Band Boodney - 4 июля 2026, München</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/fonts/fonts.css" />
 <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -71,7 +69,7 @@
     <br>Группа «Будни» не является коммерческой организацией.
     <br>Сбор и обработка персональных данных не осуществляется.</p>
   </div>
-  <div class="meta">© 2026 Band Boodney · München · <a class="impressum" href="impressum.html">Impressum</a></div>
+  <div class="meta">© 2026 Band Boodney · München · <a class="impressum" href="impressum.html">Impressum</a> · <a class="impressum" href="datenschutz.html">Datenschutz</a></div>
 </footer>
 
 <div class="modal-backdrop" id="orderModal" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="orderModalTitle">
@@ -88,6 +86,10 @@
         <input type="number" name="tickets" required min="1" max="10" step="1" value="1" inputmode="numeric" />
       </label>
       <input type="text" name="website" tabindex="-1" autocomplete="off" class="honeypot" aria-hidden="true" />
+      <label class="modal-consent">
+        <input type="checkbox" name="consent" required />
+        <span>Отправляя форму, я даю согласие на обработку моих данных в соответствии с <a href="datenschutz.html">политикой конфиденциальности</a>.</span>
+      </label>
       <div class="modal-error" role="alert" hidden></div>
       <div class="modal-success" role="status" hidden></div>
       <div class="modal-actions">
@@ -107,6 +109,7 @@
     errInvalidTickets: 'Количество билетов должно быть от 1 до 10',
     errTooMany: 'Слишком много запросов. Попробуйте через минуту.',
     errServer: 'Что-то пошло не так. Попробуйте ещё раз или напишите нам на email.',
+    errConsent: 'Пожалуйста, подтвердите согласие с политикой конфиденциальности.',
   };
 </script>
 <script src="order.js" defer></script>
