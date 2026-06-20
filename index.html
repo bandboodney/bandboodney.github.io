@@ -35,6 +35,16 @@
         Начало в 19:30
         <span class="sub">Открытие дверей в 19:00</span>
       </dd>
+
+      <dt>Репертуар</dt>
+      <dd>
+        Каждое выступление — сюрприз для зрителей. Вы услышите хиты, которые вы знаете и любите:
+        <span class="sub">Imagine Dragons · Мумий Тролль · Земфира · Король и Шут · Sia · Luis Fonsi · Кино · Nirvana · Limp Bizkit · Måneskin · Моя Мишель · и другие</span>
+        <button type="button" class="setlist-link" data-open-setlist>
+          <span class="setlist-link-text">А что было на прошлом концерте в январе?</span>
+          <span class="arrow" aria-hidden="true">→</span>
+        </button>
+      </dd>
     </dl>
 
     <div class="divider"></div>
@@ -72,6 +82,60 @@
   <div class="meta">© 2026 Band Boodney · München · <a class="impressum" href="impressum.html">Impressum</a> · <a class="impressum" href="datenschutz.html">Datenschutz</a></div>
 </footer>
 
+<div class="modal-backdrop" id="setlistModal" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="setlistModalTitle">
+  <div class="modal modal-setlist" role="document">
+    <button type="button" class="modal-close" aria-label="Закрыть">&times;</button>
+    <h3 id="setlistModalTitle">Сетлист · январь 2026</h3>
+    <p class="setlist-intro">Вот что мы играли в прошлый раз.</p>
+    <div class="setlist">
+      <div class="setlist-part">
+        <h4>Часть 1</h4>
+        <ol>
+          <li>Song 2</li>
+          <li>Медведица</li>
+          <li>Wicked Game</li>
+          <li>Shape of You</li>
+          <li>Creep</li>
+          <li>Seven Nation Army</li>
+          <li>Земля</li>
+          <li>It Must Have Been Love</li>
+          <li>Искала</li>
+          <li>Durch den Monsun</li>
+          <li>Somebody Told Me</li>
+          <li>Sex on Fire</li>
+        </ol>
+      </div>
+      <div class="setlist-part">
+        <h4>Часть 2</h4>
+        <ol>
+          <li>Bad Guy (вступление)</li>
+          <li>All the Small Things</li>
+          <li>Back to Black (mash up)</li>
+          <li>Numb</li>
+          <li>Той День</li>
+          <li>Another Love</li>
+          <li>Shallow</li>
+          <li>99 Luftballons</li>
+          <li>All the Things She Said</li>
+          <li>Not Gonna Get Us + Smack My Bitch Up</li>
+          <li>Kukla Kolduna</li>
+          <li>Hallelujah</li>
+          <li>In the End</li>
+        </ol>
+      </div>
+      <div class="setlist-part">
+        <h4>На бис</h4>
+        <ol>
+          <li>Lesnik</li>
+          <li>Zombie + Mash up</li>
+          <li>Smells Like Teen Spirit</li>
+          <li>Веночек / Підманула</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="modal-backdrop" id="orderModal" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="orderModalTitle">
   <div class="modal" role="document">
     <button type="button" class="modal-close" aria-label="Закрыть">&times;</button>
@@ -86,10 +150,7 @@
         <input type="number" name="tickets" required min="1" max="10" step="1" value="1" inputmode="numeric" />
       </label>
       <input type="text" name="website" tabindex="-1" autocomplete="off" class="honeypot" aria-hidden="true" />
-      <label class="modal-consent">
-        <input type="checkbox" name="consent" required />
-        <span>Отправляя форму, я даю согласие на обработку моих данных в соответствии с <a href="datenschutz.html">политикой конфиденциальности</a>.</span>
-      </label>
+      <p class="modal-notice">Указанные данные используются только для оформления и отправки билета. Подробнее — в <a href="datenschutz.html">политике конфиденциальности</a>.</p>
       <div class="modal-error" role="alert" hidden></div>
       <div class="modal-success" role="status" hidden></div>
       <div class="modal-actions">
@@ -109,7 +170,6 @@
     errInvalidTickets: 'Количество билетов должно быть от 1 до 10',
     errTooMany: 'Слишком много запросов. Попробуйте через минуту.',
     errServer: 'Что-то пошло не так. Попробуйте ещё раз или напишите нам на email.',
-    errConsent: 'Пожалуйста, подтвердите согласие с политикой конфиденциальности.',
   };
 </script>
 <script src="order.js" defer></script>

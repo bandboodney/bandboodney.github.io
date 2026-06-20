@@ -21,7 +21,6 @@
   const emailInput = form.querySelector('input[name="email"]');
   const ticketsInput = form.querySelector('input[name="tickets"]');
   const honeypot = form.querySelector('input[name="website"]');
-  const consentInput = form.querySelector('input[name="consent"]');
 
   let lastSubmitAt = 0;
 
@@ -104,11 +103,6 @@
       ticketsInput.focus();
       return;
     }
-    if (consentInput && !consentInput.checked) {
-      showError(i18n.errConsent || 'Please confirm your consent to the privacy policy.');
-      consentInput.focus();
-      return;
-    }
 
     submitBtn.disabled = true;
     submitBtn.textContent = i18n.sending || 'Sending...';
@@ -153,5 +147,38 @@
       submitBtn.disabled = false;
       submitBtn.textContent = submitLabel;
     }
+  });
+})();
+
+// === Setlist modal (read-only) ===
+(function () {
+  const modal = document.getElementById('setlistModal');
+  if (!modal) return;
+  const closeBtn = modal.querySelector('.modal-close');
+
+  function openModal() {
+    modal.hidden = false;
+    requestAnimationFrame(() => modal.classList.add('is-open'));
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => closeBtn && closeBtn.focus(), 50);
+  }
+
+  function closeModal() {
+    modal.classList.remove('is-open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    setTimeout(() => { modal.hidden = true; }, 150);
+  }
+
+  document.querySelectorAll('[data-open-setlist]').forEach((btn) => {
+    btn.addEventListener('click', openModal);
+  });
+  closeBtn.addEventListener('click', closeModal);
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeModal();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !modal.hidden) closeModal();
   });
 })();
