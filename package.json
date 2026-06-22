@@ -6,7 +6,7 @@
   "scripts": {
     "build": "eleventy",
     "serve": "eleventy --serve",
-    "test": "eleventy && node --test"
+    "test": "eleventy && node --test \"tests/**/*.test.js\""
   },
   "devDependencies": {
     "@11ty/eleventy": "^3.0.0"
