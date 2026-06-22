@@ -20,9 +20,20 @@ and deployed to GitHub Pages.
 2. Drop the poster image in `src/assets/img/` and reference its filename in `poster`.
 3. UI labels live in `src/_data/i18n/{ru,en,de,uk}.json` — edit a string once per language.
 
-To add a language: drop a new `<code>.json` dict in `src/_data/i18n/`, add
-`{ "code": "<code>", "permalink": "/<code>.html" }` to `src/_data/languages.json`,
-and add its `Intl` locale to `LOCALES` in `src/_data/shows.js`.
+To add a language: drop a new `<code>.json` dict in `src/_data/i18n/` (include a
+`metaDescription`), add
+`{ "code": "<code>", "permalink": "/<code>.html", "href": "/<code>.html", "locale": "<xx_XX>" }`
+to `src/_data/languages.json`, and add its `Intl` locale to `LOCALES` in
+`src/_data/shows.js`. The `href` (clean URL) and `locale` feed canonical, `hreflang`
+and Open Graph tags automatically.
+
+## SEO
+
+`src/_includes/layouts/base.njk` emits per-language canonical, `hreflang`
+(+`x-default`), Open Graph and Twitter Card tags. `src/sitemap.njk` →
+`/sitemap.xml` and `src/robots.njk` → `/robots.txt` are generated at build from
+`languages.json` and `site.url`. The QR `scanner.html` is `noindex` and excluded
+from the sitemap. Absolute URLs come from `site.url` in `src/_data/site.json`.
 
 ## Deploy
 

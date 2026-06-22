@@ -1,6 +1,6 @@
 [
-  { "code": "ru", "permalink": "/index.html" },
-  { "code": "en", "permalink": "/en.html" },
-  { "code": "de", "permalink": "/de.html" },
-  { "code": "uk", "permalink": "/uk.html" }
+  { "code": "ru", "permalink": "/index.html", "href": "/", "locale": "ru_RU" },
+  { "code": "en", "permalink": "/en.html", "href": "/en.html", "locale": "en_US" },
+  { "code": "de", "permalink": "/de.html", "href": "/de.html", "locale": "de_DE" },
+  { "code": "uk", "permalink": "/uk.html", "href": "/uk.html", "locale": "uk_UA" }
 ]
