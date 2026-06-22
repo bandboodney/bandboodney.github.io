@@ -6,11 +6,6 @@ const path = require("node:path");
 const SITE = path.join(__dirname, "..", "_site");
 const read = (p) => fs.readFileSync(path.join(SITE, p), "utf8");
 
-test("homepage is generated", () => {
-  assert.ok(fs.existsSync(path.join(SITE, "index.html")), "index.html missing");
-  assert.match(read("index.html"), /build-ok/);
-});
-
 test("assets and scanner pass through to preserved paths", () => {
   assert.ok(fs.existsSync(path.join(SITE, "assets/css/styles.css")), "styles.css");
   assert.ok(fs.existsSync(path.join(SITE, "assets/css/legal.css")), "legal.css");
@@ -30,9 +25,38 @@ test("scanner is not double-emitted as a template", () => {
   );
 });
 
-test("shows data derives localized dates", () => {
+test("three language pages are generated at preserved URLs", () => {
+  for (const f of ["index.html", "en.html", "de.html"]) {
+    assert.ok(fs.existsSync(path.join(SITE, f)), f + " missing");
+  }
+});
+
+test("RU homepage renders RU labels and upcoming event facts", () => {
   const html = read("index.html");
-  assert.match(html, /upcoming=2026-07-04/);
-  assert.match(html, /dayMonth-de=4\. Juli/);
-  assert.match(html, /lastPast-monthYear-en=January 2026/);
+  assert.match(html, /<html lang="ru">/);
+  assert.match(html, /Площадка/);
+  assert.match(html, /Kulturzentrum Gorod/);
+  assert.match(html, /4 июля/);
+  assert.match(html, /Заказать билеты/);
+});
+
+test("EN and DE pages render their own language", () => {
+  assert.match(read("en.html"), /<html lang="en">/);
+  assert.match(read("en.html"), /Order tickets/);
+  assert.match(read("de.html"), /<html lang="de">/);
+  assert.match(read("de.html"), /Veranstaltungsort/);
+  assert.match(read("de.html"), /4\. Juli/);
+});
+
+test("upcoming event never exposes a setlist; past setlist shows in modal", () => {
+  const html = read("index.html");
+  assert.match(html, /id="setlistModal"/);
+  assert.match(html, /Сетлист · январь 2026/);
+  assert.match(html, /Imagine Dragons/);
+});
+
+test("order i18n is injected per language", () => {
+  assert.match(read("index.html"), /window\.OrderLang = 'ru'/);
+  assert.match(read("de.html"), /window\.OrderLang = 'de'/);
+  assert.match(read("de.html"), /Senden\.\.\./);
 });
