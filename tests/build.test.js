@@ -62,3 +62,12 @@ test("order i18n is injected per language", () => {
   assert.match(read("de.html"), /window\.OrderLang = 'de'/);
   assert.match(read("de.html"), /Senden\.\.\./);
 });
+
+test("legal pages keep their URLs and load relocated css", () => {
+  const imp = read("impressum.html");
+  assert.match(imp, /Impressum/);
+  assert.match(imp, /\/assets\/css\/legal\.css/);
+  const ds = read("datenschutz.html");
+  assert.match(ds, /Datenschutz/);
+  assert.match(ds, /\/assets\/css\/legal\.css/);
+});
