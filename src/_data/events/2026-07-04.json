@@ -1,0 +1,16 @@
+{
+  "date": "2026-07-04",
+  "venue": {
+    "name": "Kulturzentrum Gorod - GIK e.V.",
+    "address": "Arnulfstraße 197, 80634 München"
+  },
+  "doorsOpen": "19:00",
+  "startTime": "19:30",
+  "price": "20",
+  "poster": "poster-2026-07-04.jpg",
+  "repertoire": [
+    "Imagine Dragons", "Мумий Тролль", "Земфира", "Король и Шут",
+    "Sia", "Luis Fonsi", "Кино", "Nirvana", "Limp Bizkit",
+    "Måneskin", "Моя Мишель"
+  ]
+}

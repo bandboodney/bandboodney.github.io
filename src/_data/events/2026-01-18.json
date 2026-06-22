@@ -1,0 +1,21 @@
+{
+  "date": "2026-01-18",
+  "setlist": {
+    "parts": [
+      { "id": "part1", "songs": [
+        "Song 2", "Медведица", "Wicked Game", "Shape of You", "Creep",
+        "Seven Nation Army", "Земля", "It Must Have Been Love", "Искала",
+        "Durch den Monsun", "Somebody Told Me", "Sex on Fire"
+      ]},
+      { "id": "part2", "songs": [
+        "Bad Guy (вступление)", "All the Small Things", "Back to Black (mash up)",
+        "Numb", "Той День", "Another Love", "Shallow", "99 Luftballons",
+        "All the Things She Said", "Not Gonna Get Us + Smack My Bitch Up",
+        "Kukla Kolduna", "Hallelujah", "In the End"
+      ]},
+      { "id": "encore", "songs": [
+        "Lesnik", "Zombie + Mash up", "Smells Like Teen Spirit", "Веночек / Підманула"
+      ]}
+    ]
+  }
+}

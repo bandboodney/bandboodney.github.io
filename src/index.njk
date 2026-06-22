@@ -1,0 +1,122 @@
+---
+pagination:
+  data: languages
+  size: 1
+  alias: lang
+permalink: "{{ lang.permalink }}"
+layout: layouts/base.njk
+---
+{% set t = i18n[lang.code] %}
+{% set event = shows.upcoming %}
+{% set last = shows.lastPast %}
+
+<main>
+  <div class="poster-wrap">
+    <img class="poster" src="/assets/img/{{ event.poster }}" alt="{{ t.posterAlt }} {{ site.name }} — {{ event.dayMonth[lang.code] }} {{ event.year }}" />
+  </div>
+
+  <section class="info">
+    <div class="title-row">
+      <h1>{{ event.dayMonth[lang.code] }}<br /><span class="year">{{ event.year }}</span></h1>
+      <div class="lang" role="group" aria-label="Language">
+        {% for l in languages %}
+        <a href="{{ l.permalink }}"{% if l.code == lang.code %} class="active" aria-current="page"{% endif %}>{{ l.code | upper }}</a>
+        {% endfor %}
+      </div>
+    </div>
+
+    <dl class="details">
+      <dt>{{ t.venue }}</dt>
+      <dd>
+        {{ event.venue.name }}
+        <span class="sub">{{ event.venue.address }}</span>
+      </dd>
+
+      <dt>{{ t.time }}</dt>
+      <dd>
+        {{ t.startsAt }} {{ event.startTime }}
+        <span class="sub">{{ t.doorsOpen }} {{ event.doorsOpen }}</span>
+      </dd>
+
+      <dt>{{ t.repertoire }}</dt>
+      <dd>
+        {{ t.repertoireIntro }}
+        <span class="sub">{{ event.repertoire | join(" · ") }} · {{ t.andMore }}</span>
+        {% if last %}
+        <button type="button" class="setlist-link" data-open-setlist>
+          <span class="setlist-link-text">{{ t.setlistLink }}</span>
+          <span class="arrow" aria-hidden="true">→</span>
+        </button>
+        {% endif %}
+      </dd>
+    </dl>
+
+    <div class="divider"></div>
+
+    <div class="tickets">
+      <div class="price-row">
+        <h2>{{ t.tickets }}</h2>
+        <div class="price">{{ event.price }}&thinsp;€</div>
+      </div>
+      <button type="button" class="order-btn" data-open-order>{{ t.orderBtn }}</button>
+      <p>{{ t.paypalLine }} <a class="email-paypal" href="mailto:{{ site.email }}">{{ site.email }}</a>.</p>
+      <p>{{ t.paypalNote }}</p>
+      <p>{{ t.questionsLine }} <a class="email" href="mailto:{{ site.email }}">{{ site.email }}</a>.</p>
+    </div>
+
+    <div class="social">
+      <a class="ig-link" href="{{ site.instagram.url }}" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3" y="3" width="18" height="18" rx="5" />
+          <circle cx="12" cy="12" r="4" />
+          <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+        </svg>
+        <span>{{ site.instagram.handle }}</span>
+      </a>
+    </div>
+  </section>
+</main>
+
+{% if last %}
+<div class="modal-backdrop" id="setlistModal" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="setlistModalTitle">
+  <div class="modal modal-setlist" role="document">
+    <button type="button" class="modal-close" aria-label="{{ t.close }}">&times;</button>
+    <h3 id="setlistModalTitle">{{ t.setlistTitle }} · {{ last.monthYear[lang.code] }}</h3>
+    <p class="setlist-intro">{{ t.setlistIntro }}</p>
+    <div class="setlist">
+      {% for part in last.setlist.parts %}
+      <div class="setlist-part">
+        <h4>{{ t.setlistParts[part.id] }}</h4>
+        <ol>
+          {% for song in part.songs %}<li>{{ song }}</li>{% endfor %}
+        </ol>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<div class="modal-backdrop" id="orderModal" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="orderModalTitle">
+  <div class="modal" role="document">
+    <button type="button" class="modal-close" aria-label="{{ t.close }}">&times;</button>
+    <h3 id="orderModalTitle">{{ t.orderTitle }}</h3>
+    <form class="order-form" novalidate>
+      <label class="field">
+        <span class="field-label">{{ t.emailLabel }}</span>
+        <input type="email" name="email" required autocomplete="email" placeholder="you@example.com" />
+      </label>
+      <label class="field">
+        <span class="field-label">{{ t.ticketsLabel }}</span>
+        <input type="number" name="tickets" required min="1" max="10" step="1" value="1" inputmode="numeric" />
+      </label>
+      <input type="text" name="website" tabindex="-1" autocomplete="off" class="honeypot" aria-hidden="true" />
+      <p class="modal-notice">{{ t.modalNotice.before }}<a href="/datenschutz.html">{{ t.modalNotice.link }}</a>{{ t.modalNotice.after }}</p>
+      <div class="modal-error" role="alert" hidden></div>
+      <div class="modal-success" role="status" hidden></div>
+      <div class="modal-actions">
+        <button type="submit" class="modal-submit">{{ t.submitBtn }}</button>
+      </div>
+    </form>
+  </div>
+</div>

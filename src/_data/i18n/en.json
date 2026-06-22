@@ -1,0 +1,43 @@
+{
+  "posterAlt": "Concert poster",
+  "venue": "Venue",
+  "time": "Time",
+  "startsAt": "Starts at",
+  "doorsOpen": "Doors open at",
+  "repertoire": "Repertoire",
+  "repertoireIntro": "Every show is a surprise for the audience. You'll hear the hits you know and love:",
+  "andMore": "and more",
+  "setlistLink": "What did we play last time?",
+  "tickets": "Tickets",
+  "orderBtn": "Order tickets",
+  "paypalLine": "Or send via PayPal (for «Friends & Family») to",
+  "paypalNote": "In the payment note, please include your email - your ticket will arrive there within one day.",
+  "questionsLine": "For any questions, write to",
+  "disclaimer": {
+    "line1": "Ticket payments are not a commercial sale and serve only to cover the costs of organizing the evening.",
+    "line2": "Band «Boodney» is not a commercial organization.",
+    "line3": "This site uses no tracking or analytics. Personal data is processed only when you submit a request through the \"Order tickets\" form, as described in our Privacy Policy."
+  },
+  "setlistTitle": "Setlist",
+  "setlistIntro": "Here's what we played last time.",
+  "setlistParts": { "part1": "Part 1", "part2": "Part 2", "encore": "Encore" },
+  "close": "Close",
+  "orderTitle": "Order tickets",
+  "emailLabel": "Email",
+  "ticketsLabel": "Number of tickets",
+  "modalNotice": {
+    "before": "The data you provide is used only to process and send your ticket. Learn more in our ",
+    "link": "privacy policy",
+    "after": "."
+  },
+  "submitBtn": "Request",
+  "order": {
+    "sending": "Sending...",
+    "sent": "Sent",
+    "success": "Thanks! Your request has been received. A PayPal invoice will arrive at your email shortly.",
+    "errInvalidEmail": "Please enter a valid email",
+    "errInvalidTickets": "Number of tickets must be 1-10",
+    "errTooMany": "Too many requests. Please try again in a minute.",
+    "errServer": "Something went wrong. Please try again or email us."
+  }
+}

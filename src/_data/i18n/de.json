@@ -1,0 +1,43 @@
+{
+  "posterAlt": "Konzertplakat",
+  "venue": "Veranstaltungsort",
+  "time": "Zeit",
+  "startsAt": "Beginn um",
+  "doorsOpen": "Einlass ab",
+  "repertoire": "Repertoire",
+  "repertoireIntro": "Jede Show ist eine Überraschung für das Publikum. Du hörst die Hits, die du kennst und liebst:",
+  "andMore": "und mehr",
+  "setlistLink": "Was haben wir letztes Mal gespielt?",
+  "tickets": "Tickets",
+  "orderBtn": "Tickets bestellen",
+  "paypalLine": "Oder per PayPal (für „Friends & Family“) an",
+  "paypalNote": "Bitte gib im Verwendungszweck deine E-Mail-Adresse an - dein Ticket kommt innerhalb eines Tages dorthin.",
+  "questionsLine": "Bei Fragen schreib an",
+  "disclaimer": {
+    "line1": "Die Ticketzahlungen sind kein kommerzieller Verkauf und dienen ausschließlich der Deckung der Kosten für die Organisation des Abends.",
+    "line2": "Die Band „Boodney“ ist keine kommerzielle Organisation.",
+    "line3": "Diese Website verwendet kein Tracking und keine Analyse. Personenbezogene Daten werden nur verarbeitet, wenn du eine Anfrage über das Formular „Tickets bestellen“ absendest, wie in der Datenschutzerklärung beschrieben."
+  },
+  "setlistTitle": "Setlist",
+  "setlistIntro": "Das haben wir letztes Mal gespielt.",
+  "setlistParts": { "part1": "Teil 1", "part2": "Teil 2", "encore": "Zugabe" },
+  "close": "Schließen",
+  "orderTitle": "Tickets bestellen",
+  "emailLabel": "E-Mail",
+  "ticketsLabel": "Anzahl der Tickets",
+  "modalNotice": {
+    "before": "Die angegebenen Daten werden nur zur Bearbeitung und zum Versand deines Tickets verwendet. Mehr dazu in unserer ",
+    "link": "Datenschutzerklärung",
+    "after": "."
+  },
+  "submitBtn": "Anfragen",
+  "order": {
+    "sending": "Senden...",
+    "sent": "Gesendet",
+    "success": "Danke! Deine Anfrage ist eingegangen. Eine PayPal-Rechnung kommt in Kürze an deine E-Mail.",
+    "errInvalidEmail": "Bitte gib eine gültige E-Mail-Adresse ein",
+    "errInvalidTickets": "Anzahl der Tickets muss zwischen 1 und 10 liegen",
+    "errTooMany": "Zu viele Anfragen. Bitte versuch es in einer Minute erneut.",
+    "errServer": "Etwas ist schiefgelaufen. Bitte versuch es erneut oder schreib uns eine E-Mail."
+  }
+}

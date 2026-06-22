@@ -1,0 +1,28 @@
+{% set t = i18n[lang.code] %}
+{% set event = shows.upcoming %}
+<!doctype html>
+<html lang="{{ lang.code }}">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{{ site.name }} - {{ event.dayMonth[lang.code] }} {{ event.year }}, München</title>
+<link rel="stylesheet" href="/assets/fonts/fonts.css" />
+<link rel="stylesheet" href="/assets/css/styles.css" />
+</head>
+<body>
+{{ content | safe }}
+<footer>
+  <div class="disclaimer">
+    <p>{{ t.disclaimer.line1 }}
+    <br>{{ t.disclaimer.line2 }}
+    <br>{{ t.disclaimer.line3 }}</p>
+  </div>
+  <div class="meta">© {{ event.year }} {{ site.name }} · München · <a class="impressum" href="/impressum.html">Impressum</a> · <a class="impressum" href="/datenschutz.html">Datenschutz</a></div>
+</footer>
+<script>
+  window.OrderLang = '{{ lang.code }}';
+  window.OrderI18n = {{ t.order | dump | safe }};
+</script>
+<script src="/assets/js/order.js" defer></script>
+</body>
+</html>
