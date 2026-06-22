@@ -13,6 +13,7 @@ test("homepage is generated", () => {
 
 test("assets and scanner pass through to preserved paths", () => {
   assert.ok(fs.existsSync(path.join(SITE, "assets/css/styles.css")), "styles.css");
+  assert.ok(fs.existsSync(path.join(SITE, "assets/css/legal.css")), "legal.css");
   assert.ok(fs.existsSync(path.join(SITE, "assets/js/order.js")), "order.js");
   assert.ok(fs.existsSync(path.join(SITE, "assets/fonts/fonts.css")), "fonts.css");
   assert.ok(fs.existsSync(path.join(SITE, "assets/vendor/html5-qrcode.min.js")), "vendor");
