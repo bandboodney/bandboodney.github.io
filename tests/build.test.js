@@ -29,3 +29,10 @@ test("scanner is not double-emitted as a template", () => {
     "scanner should only exist at /scanner.html, not /tools/scanner/"
   );
 });
+
+test("shows data derives localized dates", () => {
+  const html = read("index.html");
+  assert.match(html, /upcoming=2026-07-04/);
+  assert.match(html, /dayMonth-de=4\. Juli/);
+  assert.match(html, /lastPast-monthYear-en=January 2026/);
+});
