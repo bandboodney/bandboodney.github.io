@@ -72,6 +72,47 @@ test("order i18n is injected per language", () => {
   assert.match(read("de.html"), /Senden\.\.\./);
 });
 
+test("sitemap.xml lists every language URL and the legal pages", () => {
+  const xml = read("sitemap.xml");
+  assert.match(xml, /<loc>https:\/\/boodney\.band\/<\/loc>/);
+  for (const p of ["en.html", "de.html", "uk.html", "impressum.html", "datenschutz.html"]) {
+    assert.match(xml, new RegExp(`<loc>https://boodney\\.band/${p.replace(".", "\\.")}</loc>`));
+  }
+  assert.match(xml, /hreflang="uk"/);
+  assert.match(xml, /hreflang="x-default"/);
+});
+
+test("robots.txt points at the sitemap and blocks the scanner", () => {
+  const txt = read("robots.txt");
+  assert.match(txt, /Sitemap: https:\/\/boodney\.band\/sitemap\.xml/);
+  assert.match(txt, /Disallow: \/scanner\.html/);
+});
+
+test("each language page carries a self-canonical, hreflang and OG image", () => {
+  const cases = [
+    ["index.html", "https://boodney.band/"],
+    ["en.html", "https://boodney.band/en.html"],
+    ["de.html", "https://boodney.band/de.html"],
+    ["uk.html", "https://boodney.band/uk.html"],
+  ];
+  for (const [file, canonical] of cases) {
+    const html = read(file);
+    assert.match(html, new RegExp(`<link rel="canonical" href="${canonical.replace(/\//g, "\\/")}"`), file + " canonical");
+    assert.match(html, /<link rel="alternate" hreflang="x-default"/, file + " x-default");
+    assert.match(html, /property="og:image" content="https:\/\/boodney\.band\/assets\/img\//, file + " og:image");
+    assert.match(html, /name="twitter:card" content="summary_large_image"/, file + " twitter card");
+  }
+});
+
+test("scanner is excluded from indexing", () => {
+  assert.match(read("scanner.html"), /<meta name="robots" content="noindex, nofollow">/);
+});
+
+test("legal pages carry self-canonical and OG tags", () => {
+  assert.match(read("impressum.html"), /<link rel="canonical" href="https:\/\/boodney\.band\/impressum\.html">/);
+  assert.match(read("datenschutz.html"), /property="og:url" content="https:\/\/boodney\.band\/datenschutz\.html"/);
+});
+
 test("legal pages keep their URLs and load relocated css", () => {
   const imp = read("impressum.html");
   assert.match(imp, /Impressum/);

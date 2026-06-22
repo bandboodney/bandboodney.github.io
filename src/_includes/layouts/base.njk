@@ -5,7 +5,25 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>{{ site.name }} - {{ event.dayMonth[lang.code] }} {{ event.year }}, München</title>
+{% set pageTitle = site.name + " - " + event.dayMonth[lang.code] + " " + (event.year | string) + ", München" %}
+{% set canonical = site.url + lang.href %}
+{% set ogImage = site.url + "/assets/img/" + event.poster %}
+<title>{{ pageTitle }}</title>
+<meta name="description" content="{{ t.metaDescription }}" />
+<link rel="canonical" href="{{ canonical }}" />
+{% for l in languages %}<link rel="alternate" hreflang="{{ l.code }}" href="{{ site.url }}{{ l.href }}" />
+{% endfor %}<link rel="alternate" hreflang="x-default" href="{{ site.url }}/" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="{{ site.name }}" />
+<meta property="og:title" content="{{ pageTitle }}" />
+<meta property="og:description" content="{{ t.metaDescription }}" />
+<meta property="og:url" content="{{ canonical }}" />
+<meta property="og:locale" content="{{ lang.locale }}" />
+<meta property="og:image" content="{{ ogImage }}" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="{{ pageTitle }}" />
+<meta name="twitter:description" content="{{ t.metaDescription }}" />
+<meta name="twitter:image" content="{{ ogImage }}" />
 <link rel="stylesheet" href="/assets/fonts/fonts.css" />
 <link rel="stylesheet" href="/assets/css/styles.css" />
 </head>
