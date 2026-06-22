@@ -1,0 +1,14 @@
+{
+  "name": "bandboodney-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Band Boodney concert site (Eleventy)",
+  "scripts": {
+    "build": "eleventy",
+    "serve": "eleventy --serve",
+    "test": "eleventy && node --test"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "^3.0.0"
+  }
+}
