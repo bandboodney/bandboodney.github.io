@@ -20,3 +20,11 @@ test("assets and scanner pass through to preserved paths", () => {
   assert.strictEqual(fs.existsSync(path.join(SITE, "scanner.html")), true, "/scanner.html preserved");
   assert.ok(fs.existsSync(path.join(SITE, "CNAME")), "CNAME");
 });
+
+test("scanner is not double-emitted as a template", () => {
+  assert.strictEqual(
+    fs.existsSync(path.join(SITE, "tools/scanner/index.html")),
+    false,
+    "scanner should only exist at /scanner.html, not /tools/scanner/"
+  );
+});
