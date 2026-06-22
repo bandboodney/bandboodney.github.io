@@ -1,5 +1,6 @@
 [
   { "code": "ru", "permalink": "/index.html" },
   { "code": "en", "permalink": "/en.html" },
-  { "code": "de", "permalink": "/de.html" }
+  { "code": "de", "permalink": "/de.html" },
+  { "code": "uk", "permalink": "/uk.html" }
 ]
