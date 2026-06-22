@@ -25,8 +25,8 @@ test("scanner is not double-emitted as a template", () => {
   );
 });
 
-test("three language pages are generated at preserved URLs", () => {
-  for (const f of ["index.html", "en.html", "de.html"]) {
+test("all language pages are generated at preserved URLs", () => {
+  for (const f of ["index.html", "en.html", "de.html", "uk.html"]) {
     assert.ok(fs.existsSync(path.join(SITE, f)), f + " missing");
   }
 });
@@ -46,6 +46,15 @@ test("EN and DE pages render their own language", () => {
   assert.match(read("de.html"), /<html lang="de">/);
   assert.match(read("de.html"), /Veranstaltungsort/);
   assert.match(read("de.html"), /4\. Juli/);
+});
+
+test("UK page renders Ukrainian labels and localized date", () => {
+  const html = read("uk.html");
+  assert.match(html, /<html lang="uk">/);
+  assert.match(html, /Локація/);
+  assert.match(html, /Замовити квитки/);
+  assert.match(html, /4 липня/);
+  assert.match(html, /window\.OrderLang = 'uk'/);
 });
 
 test("past setlist (not the upcoming event) renders inside the setlist modal", () => {

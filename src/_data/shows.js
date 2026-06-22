@@ -1,7 +1,7 @@
 const fs = require("node:fs");
 const path = require("node:path");
 
-const LOCALES = { ru: "ru-RU", en: "en-US", de: "de-DE" };
+const LOCALES = { ru: "ru-RU", en: "en-US", de: "de-DE", uk: "uk-UA" };
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
 
 function localized(dateStr, opts) {

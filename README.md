@@ -1,6 +1,6 @@
 # Band Boodney — boodney.band
 
-Trilingual (RU/EN/DE) concert site, built with [Eleventy](https://www.11ty.dev/)
+Multilingual (RU/EN/DE/UK) concert site, built with [Eleventy](https://www.11ty.dev/)
 and deployed to GitHub Pages.
 
 ## Develop
@@ -18,7 +18,11 @@ and deployed to GitHub Pages.
    - **Past:** after the gig, add a `setlist`. The most recent past event's setlist
      auto-appears in the "last time" modal.
 2. Drop the poster image in `src/assets/img/` and reference its filename in `poster`.
-3. UI labels live in `src/_data/i18n/{ru,en,de}.json` — edit a string once per language.
+3. UI labels live in `src/_data/i18n/{ru,en,de,uk}.json` — edit a string once per language.
+
+To add a language: drop a new `<code>.json` dict in `src/_data/i18n/`, add
+`{ "code": "<code>", "permalink": "/<code>.html" }` to `src/_data/languages.json`,
+and add its `Intl` locale to `LOCALES` in `src/_data/shows.js`.
 
 ## Deploy
 
