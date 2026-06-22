@@ -48,11 +48,13 @@ test("EN and DE pages render their own language", () => {
   assert.match(read("de.html"), /4\. Juli/);
 });
 
-test("upcoming event never exposes a setlist; past setlist shows in modal", () => {
+test("past setlist (not the upcoming event) renders inside the setlist modal", () => {
   const html = read("index.html");
   assert.match(html, /id="setlistModal"/);
   assert.match(html, /Сетлист · январь 2026/);
-  assert.match(html, /Imagine Dragons/);
+  // "Медведица" is only in the January setlist, never in the upcoming repertoire,
+  // and must appear after the setlist modal opening (i.e. inside it).
+  assert.match(html, /id="setlistModal"[\s\S]*Медведица/);
 });
 
 test("order i18n is injected per language", () => {

@@ -13,6 +13,17 @@ function localized(dateStr, opts) {
   return out;
 }
 
+function localizedMonthYear(dateStr) {
+  const d = new Date(dateStr + "T00:00:00Z");
+  const year = dateStr.slice(0, 4);
+  const out = {};
+  for (const [code, loc] of Object.entries(LOCALES)) {
+    const month = new Intl.DateTimeFormat(loc, { month: "long", timeZone: "UTC" }).format(d);
+    out[code] = `${month} ${year}`;
+  }
+  return out;
+}
+
 module.exports = function () {
   const dir = path.join(__dirname, "events");
   const today = new Date().toISOString().slice(0, 10);
@@ -35,7 +46,7 @@ module.exports = function () {
         status: raw.date < today ? "past" : "upcoming",
         year: Number(raw.date.slice(0, 4)),
         dayMonth: localized(raw.date, { day: "numeric", month: "long" }),
-        monthYear: localized(raw.date, { month: "long", year: "numeric" }),
+        monthYear: localizedMonthYear(raw.date),
       };
     })
     .sort((a, b) => a.date.localeCompare(b.date));
