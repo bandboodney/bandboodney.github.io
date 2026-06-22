@@ -3,18 +3,39 @@
   "setlist": {
     "parts": [
       { "id": "part1", "songs": [
-        "Song 2", "Медведица", "Wicked Game", "Shape of You", "Creep",
-        "Seven Nation Army", "Земля", "It Must Have Been Love", "Искала",
-        "Durch den Monsun", "Somebody Told Me", "Sex on Fire"
+        "Blur - Song 2",
+        "Мумий Тролль - Медведица",
+        "Chris Isaak - Wicked Game",
+        "Ed Sheeran - Shape of You",
+        "Radiohead - Creep",
+        "The White Stripes - Seven Nation Army",
+        "Маша и Медведи - Земля",
+        "Roxette - It Must Have Been Love",
+        "Земфира - Искала",
+        "Tokio Hotel - Durch den Monsun",
+        "The Killers - Somebody Told Me",
+        "Kings of Leon - Sex on Fire"
       ]},
       { "id": "part2", "songs": [
-        "Bad Guy (вступление)", "All the Small Things", "Back to Black (mash up)",
-        "Numb", "Той День", "Another Love", "Shallow", "99 Luftballons",
-        "All the Things She Said", "Not Gonna Get Us + Smack My Bitch Up",
-        "Kukla Kolduna", "Hallelujah", "In the End"
+        "Billie Eilish - Bad Guy (вступление)",
+        "Blink-182 - All the Small Things",
+        "Amy Winehouse - Back to Black (mash up)",
+        "Linkin Park - Numb",
+        "Океан Ельзи - Той День",
+        "Tom Odell - Another Love",
+        "Lady Gaga - Shallow",
+        "Nena - 99 Luftballons",
+        "t.A.T.u. - All the Things She Said",
+        "t.A.T.u. - Not Gonna Get Us + Smack My Bitch Up",
+        "Король и Шут - Кукла колдуна",
+        "Leonard Cohen - Hallelujah",
+        "Linkin Park - In the End"
       ]},
       { "id": "encore", "songs": [
-        "Lesnik", "Zombie + Mash up", "Smells Like Teen Spirit", "Веночек / Підманула"
+        "Король и Шут - Лесник",
+        "Cranberries - Zombie + Mash up",
+        "Nirvana - Smells Like Teen Spirit",
+        "Надежда Кадышева - Веночек / Підманула"
       ]}
     ]
   }
