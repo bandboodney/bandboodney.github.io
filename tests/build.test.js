@@ -10,3 +10,13 @@ test("homepage is generated", () => {
   assert.ok(fs.existsSync(path.join(SITE, "index.html")), "index.html missing");
   assert.match(read("index.html"), /build-ok/);
 });
+
+test("assets and scanner pass through to preserved paths", () => {
+  assert.ok(fs.existsSync(path.join(SITE, "assets/css/styles.css")), "styles.css");
+  assert.ok(fs.existsSync(path.join(SITE, "assets/js/order.js")), "order.js");
+  assert.ok(fs.existsSync(path.join(SITE, "assets/fonts/fonts.css")), "fonts.css");
+  assert.ok(fs.existsSync(path.join(SITE, "assets/vendor/html5-qrcode.min.js")), "vendor");
+  assert.ok(fs.existsSync(path.join(SITE, "assets/img/poster-2026-07-04.jpg")), "poster");
+  assert.strictEqual(fs.existsSync(path.join(SITE, "scanner.html")), true, "/scanner.html preserved");
+  assert.ok(fs.existsSync(path.join(SITE, "CNAME")), "CNAME");
+});

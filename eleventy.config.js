@@ -1,4 +1,7 @@
 module.exports = function (eleventyConfig) {
+  eleventyConfig.addPassthroughCopy({ "src/assets": "assets" });
+  eleventyConfig.addPassthroughCopy({ "src/CNAME": "CNAME" });
+  eleventyConfig.addPassthroughCopy({ "src/tools/scanner/index.html": "scanner.html" });
   return {
     dir: {
       input: "src",
