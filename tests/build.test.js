@@ -15,6 +15,7 @@ test("assets and scanner pass through to preserved paths", () => {
   assert.ok(fs.existsSync(path.join(SITE, "assets/img/poster-2026-07-04.jpg")), "poster");
   assert.strictEqual(fs.existsSync(path.join(SITE, "scanner.html")), true, "/scanner.html preserved");
   assert.ok(fs.existsSync(path.join(SITE, "CNAME")), "CNAME");
+  assert.ok(fs.existsSync(path.join(SITE, "favicon.ico")), "favicon.ico at root");
 });
 
 test("scanner is not double-emitted as a template", () => {
@@ -140,6 +141,12 @@ test("each language page embeds valid MusicEvent JSON-LD", () => {
     assert.strictEqual(ld.startDate, "2026-07-04T19:30:00+02:00", file + " DST-aware startDate");
     assert.strictEqual(ld.location.address.addressLocality, "München", file + " locality");
     assert.strictEqual(ld.offers.priceCurrency, "EUR", file + " currency");
+  }
+});
+
+test("every page references the favicon", () => {
+  for (const f of ["index.html", "en.html", "de.html", "uk.html", "impressum.html", "datenschutz.html"]) {
+    assert.match(read(f), /<link rel="icon" href="\/favicon\.ico"/, f + " favicon link");
   }
 });
 
