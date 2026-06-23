@@ -167,3 +167,15 @@ test("legal pages keep their URLs and load relocated css", () => {
   assert.match(ds, /Datenschutz/);
   assert.match(ds, /\/assets\/css\/legal\.css/);
 });
+
+test("legal pages adopt the dark theme and self-hosted Inter font", () => {
+  const css = fs.readFileSync(path.join(SITE, "assets/css/legal.css"), "utf8");
+  assert.match(css, /background:\s*var\(--bg\)/, "body uses --bg");
+  assert.match(css, /--bg:\s*#0a0a0a/, "dark background token");
+  assert.match(css, /font-family:\s*"Inter"/, "Inter font");
+  for (const f of ["impressum.html", "datenschutz.html"]) {
+    const html = read(f);
+    assert.match(html, /\/assets\/fonts\/fonts\.css/, f + " loads Inter");
+    assert.doesNotMatch(html, /bg-white|text-gray-800/, f + " drops light-theme classes");
+  }
+});
