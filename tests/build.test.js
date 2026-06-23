@@ -124,6 +124,14 @@ test("language switcher links to clean canonical URLs, never /index.html", () =>
   }
 });
 
+test("legal pages link home to / (root), never index.html", () => {
+  for (const f of ["impressum.html", "datenschutz.html"]) {
+    const html = read(f);
+    assert.match(html, /<a href="\/" [^>]*>Zurück zur Startseite<\/a>/, f + " home link is /");
+    assert.doesNotMatch(html, /href="index\.html"|href="\/index\.html"/, f + " no index.html link");
+  }
+});
+
 test("each language page embeds valid MusicEvent JSON-LD", () => {
   const cases = [
     ["index.html", "ru", "https://boodney.band/"],
