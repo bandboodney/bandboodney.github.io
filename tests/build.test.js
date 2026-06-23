@@ -57,6 +57,16 @@ test("UK page renders Ukrainian labels and localized date", () => {
   assert.match(html, /window\.OrderLang = 'uk'/);
 });
 
+test("Ukrainian switcher shows 'UA' label but keeps technical code 'uk'", () => {
+  const html = read("uk.html");
+  // Visible switcher label is UA (avoids UK = United Kingdom confusion)...
+  assert.match(html, /lang="uk" hreflang="uk">UA</);
+  // ...while the SEO-critical codes stay the valid ISO 639-1 'uk'.
+  assert.match(html, /<html lang="uk">/);
+  assert.match(html, /<link rel="alternate" hreflang="uk" href="https:\/\/boodney\.band\/uk\.html"/);
+  assert.doesNotMatch(html, /hreflang="ua"/);
+});
+
 test("past setlist (not the upcoming event) renders inside the setlist modal", () => {
   const html = read("index.html");
   assert.match(html, /id="setlistModal"/);
