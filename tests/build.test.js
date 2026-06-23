@@ -114,6 +114,15 @@ test("each language page carries a self-canonical, hreflang and OG image", () =>
   }
 });
 
+test("language switcher links to clean canonical URLs, never /index.html", () => {
+  for (const f of ["index.html", "en.html", "de.html", "uk.html"]) {
+    const html = read(f);
+    // the RU switcher link must target "/" (the canonical), not the canonicalized "/index.html"
+    assert.match(html, /<a href="\/" [^>]*hreflang="ru">/, f + " RU link points to /");
+    assert.doesNotMatch(html, /href="\/index\.html"/, f + " must not link to /index.html");
+  }
+});
+
 test("scanner is excluded from indexing", () => {
   assert.match(read("scanner.html"), /<meta name="robots" content="noindex, nofollow">/);
 });
