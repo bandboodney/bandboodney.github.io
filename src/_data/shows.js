@@ -13,6 +13,23 @@ function localized(dateStr, opts) {
   return out;
 }
 
+// Europe/Berlin UTC offset for a given date, as "+02:00" / "+01:00" (DST-aware).
+function berlinOffset(dateStr) {
+  const d = new Date(dateStr + "T12:00:00Z");
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "Europe/Berlin",
+    timeZoneName: "longOffset",
+  }).formatToParts(d);
+  const tz = (parts.find((p) => p.type === "timeZoneName") || {}).value || "GMT+00:00";
+  return tz.replace("GMT", "") || "+00:00";
+}
+
+// Combine a YYYY-MM-DD date and HH:MM local time into a TZ-qualified ISO string.
+function localDateTime(dateStr, hhmm) {
+  if (!hhmm) return null;
+  return `${dateStr}T${hhmm}:00${berlinOffset(dateStr)}`;
+}
+
 function localizedMonthYear(dateStr) {
   const d = new Date(dateStr + "T00:00:00Z");
   const year = dateStr.slice(0, 4);
@@ -47,6 +64,8 @@ module.exports = function () {
         year: Number(raw.date.slice(0, 4)),
         dayMonth: localized(raw.date, { day: "numeric", month: "long" }),
         monthYear: localizedMonthYear(raw.date),
+        startDateISO: localDateTime(raw.date, raw.startTime),
+        doorDateISO: localDateTime(raw.date, raw.doorsOpen),
       };
     })
     .sort((a, b) => a.date.localeCompare(b.date));

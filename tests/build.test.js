@@ -123,6 +123,26 @@ test("language switcher links to clean canonical URLs, never /index.html", () =>
   }
 });
 
+test("each language page embeds valid MusicEvent JSON-LD", () => {
+  const cases = [
+    ["index.html", "ru", "https://boodney.band/"],
+    ["en.html", "en", "https://boodney.band/en.html"],
+    ["de.html", "de", "https://boodney.band/de.html"],
+    ["uk.html", "uk", "https://boodney.band/uk.html"],
+  ];
+  for (const [file, code, url] of cases) {
+    const m = read(file).match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
+    assert.ok(m, file + " has a JSON-LD block");
+    const ld = JSON.parse(m[1]); // throws if malformed
+    assert.strictEqual(ld["@type"], "MusicEvent", file + " @type");
+    assert.strictEqual(ld.url, url, file + " url is canonical");
+    assert.strictEqual(ld.inLanguage, code, file + " inLanguage");
+    assert.strictEqual(ld.startDate, "2026-07-04T19:30:00+02:00", file + " DST-aware startDate");
+    assert.strictEqual(ld.location.address.addressLocality, "München", file + " locality");
+    assert.strictEqual(ld.offers.priceCurrency, "EUR", file + " currency");
+  }
+});
+
 test("scanner is excluded from indexing", () => {
   assert.match(read("scanner.html"), /<meta name="robots" content="noindex, nofollow">/);
 });

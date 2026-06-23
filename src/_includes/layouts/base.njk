@@ -24,6 +24,40 @@
 <meta name="twitter:title" content="{{ pageTitle }}" />
 <meta name="twitter:description" content="{{ t.metaDescription }}" />
 <meta name="twitter:image" content="{{ ogImage }}" />
+{% set eventLd = {
+  "@context": "https://schema.org",
+  "@type": "MusicEvent",
+  "name": pageTitle,
+  "description": t.metaDescription,
+  "startDate": event.startDateISO,
+  "doorTime": event.doorDateISO,
+  "eventStatus": "https://schema.org/EventScheduled",
+  "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+  "image": [ogImage],
+  "url": canonical,
+  "inLanguage": lang.code,
+  "location": {
+    "@type": "Place",
+    "name": event.venue.name,
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": event.venue.street,
+      "postalCode": event.venue.postalCode,
+      "addressLocality": event.venue.city,
+      "addressCountry": event.venue.country
+    }
+  },
+  "performer": { "@type": "MusicGroup", "name": "Boodney" },
+  "organizer": { "@type": "Organization", "name": site.name, "url": site.url },
+  "offers": {
+    "@type": "Offer",
+    "price": event.price,
+    "priceCurrency": "EUR",
+    "availability": "https://schema.org/InStock",
+    "url": canonical
+  }
+} %}
+<script type="application/ld+json">{{ eventLd | dump | safe }}</script>
 <link rel="stylesheet" href="/assets/fonts/fonts.css" />
 <link rel="stylesheet" href="/assets/css/styles.css" />
 </head>
