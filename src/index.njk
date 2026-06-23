@@ -20,7 +20,7 @@ layout: layouts/base.njk
       <h1>{{ event.dayMonth[lang.code] }}<br /><span class="year">{{ event.year }}</span></h1>
       <div class="lang" role="group" aria-label="Language">
         {% for l in languages %}
-        <a href="{{ l.permalink }}"{% if l.code == lang.code %} class="active" aria-current="page"{% endif %} lang="{{ l.code }}" hreflang="{{ l.code }}">{{ l.label or (l.code | upper) }}</a>
+        <a href="{{ l.href }}"{% if l.code == lang.code %} class="active" aria-current="page"{% endif %} lang="{{ l.code }}" hreflang="{{ l.code }}">{{ l.label or (l.code | upper) }}</a>
         {% endfor %}
       </div>
     </div>
