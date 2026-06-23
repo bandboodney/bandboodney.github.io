@@ -2,7 +2,11 @@
   "date": "2026-07-04",
   "venue": {
     "name": "Kulturzentrum Gorod - GIK e.V.",
-    "address": "Arnulfstraße 197, 80634 München"
+    "address": "Arnulfstraße 197, 80634 München",
+    "street": "Arnulfstraße 197",
+    "postalCode": "80634",
+    "city": "München",
+    "country": "DE"
   },
   "doorsOpen": "19:00",
   "startTime": "19:30",

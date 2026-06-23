@@ -35,6 +35,13 @@ and Open Graph tags automatically.
 `languages.json` and `site.url`. The QR `scanner.html` is `noindex` and excluded
 from the sitemap. Absolute URLs come from `site.url` in `src/_data/site.json`.
 
+The layout also embeds a `MusicEvent` JSON-LD block for the upcoming show
+(name, DST-aware `startDate`/`doorTime`, venue `PostalAddress`, performer,
+`Offer` price). The timezone-qualified datetimes are derived in
+`src/_data/shows.js` (`berlinOffset`/`localDateTime`, Europe/Berlin), and the
+structured address parts (`street`/`postalCode`/`city`/`country`) live on the
+event's `venue` in `src/_data/events/*.json`.
+
 ## Deploy
 
 Push to `main`; the GitHub Actions workflow builds and deploys automatically.
