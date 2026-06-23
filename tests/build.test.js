@@ -132,6 +132,38 @@ test("legal pages link home to / (root), never index.html", () => {
   }
 });
 
+test("no generated page links to index.html (only the clean canonical / )", () => {
+  // Global guard: index.html is the RU homepage's *file*, but its canonical URL
+  // is "/". Any href targeting index.html (bare or rooted) is a canonicalized,
+  // non-indexable link that Semrush flags. Scan every emitted .html exhaustively
+  // so a stray link anywhere fails the build, not just the spots we hand-listed.
+  const htmlFiles = [];
+  (function walk(dir) {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) walk(full);
+      else if (entry.name.endsWith(".html")) htmlFiles.push(full);
+    }
+  })(SITE);
+  assert.ok(htmlFiles.length > 0, "found HTML to scan");
+
+  const offenders = [];
+  const linkRe = /(?:href|src)\s*=\s*["']([^"']*)["']/gi;
+  for (const file of htmlFiles) {
+    const html = fs.readFileSync(file, "utf8");
+    let m;
+    while ((m = linkRe.exec(html)) !== null) {
+      const url = m[1];
+      // strip any query/fragment, then flag links whose path ends in index.html
+      const pathPart = url.split(/[?#]/)[0];
+      if (/(^|\/)index\.html$/.test(pathPart)) {
+        offenders.push(`${path.relative(SITE, file)} -> ${url}`);
+      }
+    }
+  }
+  assert.deepStrictEqual(offenders, [], "links to index.html found:\n" + offenders.join("\n"));
+});
+
 test("each language page embeds valid MusicEvent JSON-LD", () => {
   const cases = [
     ["index.html", "ru", "https://boodney.band/"],
