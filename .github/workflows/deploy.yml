@@ -24,7 +24,9 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npm run build
+      # `npm test` builds _site then runs the suite against it; a red suite
+      # fails this step so the deploy job (needs: build) never runs.
+      - run: npm test
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
