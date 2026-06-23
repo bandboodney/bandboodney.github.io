@@ -2,6 +2,7 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.ignores.add("src/tools/scanner/index.html");
   eleventyConfig.addPassthroughCopy({ "src/assets": "assets" });
   eleventyConfig.addPassthroughCopy({ "src/CNAME": "CNAME" });
+  eleventyConfig.addPassthroughCopy({ "src/favicon.ico": "favicon.ico" });
   eleventyConfig.addPassthroughCopy({ "src/tools/scanner/index.html": "scanner.html" });
   return {
     dir: {
