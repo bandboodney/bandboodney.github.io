@@ -184,8 +184,20 @@ test("between gigs, each language page embeds MusicGroup (not MusicEvent) JSON-L
     assert.strictEqual(ld["@type"], "MusicGroup", file + " @type");
     assert.strictEqual(ld.name, "Boodney", file + " name");
     assert.strictEqual(ld.url, url, file + " url is canonical");
-    assert.deepStrictEqual(ld.sameAs, ["https://www.instagram.com/boodney_official/"], file + " sameAs");
+    assert.deepStrictEqual(
+      ld.sameAs,
+      ["https://www.instagram.com/boodney_official/", "https://www.tiktok.com/@boodney_official"],
+      file + " sameAs"
+    );
     assert.deepStrictEqual(ld.image, ["https://boodney.band/assets/img/boodney-logo.jpg"], file + " image");
+  }
+});
+
+test("every language page links Instagram and TikTok", () => {
+  for (const f of ["index.html", "en.html", "de.html", "uk.html"]) {
+    const html = read(f);
+    assert.match(html, /href="https:\/\/www\.instagram\.com\/boodney_official\/"/, f + " instagram");
+    assert.match(html, /href="https:\/\/www\.tiktok\.com\/@boodney_official"/, f + " tiktok");
   }
 });
 
