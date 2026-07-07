@@ -6,6 +6,7 @@
   "scripts": {
     "build": "eleventy",
     "serve": "eleventy --serve",
+    "new-event": "node scripts/new-event.js",
     "test": "eleventy && node --test \"tests/**/*.test.js\""
   },
   "devDependencies": {

@@ -13,6 +13,7 @@ test("assets and scanner pass through to preserved paths", () => {
   assert.ok(fs.existsSync(path.join(SITE, "assets/fonts/fonts.css")), "fonts.css");
   assert.ok(fs.existsSync(path.join(SITE, "assets/vendor/html5-qrcode.min.js")), "vendor");
   assert.ok(fs.existsSync(path.join(SITE, "assets/img/poster-2026-07-04.jpg")), "poster");
+  assert.ok(fs.existsSync(path.join(SITE, "assets/img/boodney-logo.jpg")), "logo");
   assert.strictEqual(fs.existsSync(path.join(SITE, "scanner.html")), true, "/scanner.html preserved");
   assert.ok(fs.existsSync(path.join(SITE, "CNAME")), "CNAME");
   assert.ok(fs.existsSync(path.join(SITE, "favicon.ico")), "favicon.ico at root");
@@ -32,29 +33,32 @@ test("all language pages are generated at preserved URLs", () => {
   }
 });
 
-test("RU homepage renders RU labels and upcoming event facts", () => {
+test("RU homepage renders the between-gigs state (no upcoming event)", () => {
   const html = read("index.html");
   assert.match(html, /<html lang="ru">/);
-  assert.match(html, /Площадка/);
-  assert.match(html, /Kulturzentrum Gorod/);
-  assert.match(html, /4 июля/);
-  assert.match(html, /Заказать билеты/);
+  assert.match(html, /Band Boodney/);
+  assert.match(html, /Кавер-группа из Мюнхена/);
+  assert.match(html, /Следующий концерт — скоро/);
+  assert.match(html, /boodney-logo\.jpg/);
+  // no stale event content: no order flow, no venue block
+  // (the footer disclaimer still names the «Заказать билеты» form — that's legal text)
+  assert.doesNotMatch(html, /class="order-btn"|data-open-order|id="orderModal"/);
+  assert.doesNotMatch(html, /Kulturzentrum Gorod/);
 });
 
 test("EN and DE pages render their own language", () => {
   assert.match(read("en.html"), /<html lang="en">/);
-  assert.match(read("en.html"), /Order tickets/);
+  assert.match(read("en.html"), /Cover band from Munich/);
   assert.match(read("de.html"), /<html lang="de">/);
-  assert.match(read("de.html"), /Veranstaltungsort/);
-  assert.match(read("de.html"), /4\. Juli/);
+  assert.match(read("de.html"), /Coverband aus München/);
+  assert.match(read("de.html"), /Nächstes Konzert — bald/);
 });
 
-test("UK page renders Ukrainian labels and localized date", () => {
+test("UK page renders Ukrainian labels", () => {
   const html = read("uk.html");
   assert.match(html, /<html lang="uk">/);
-  assert.match(html, /Локація/);
-  assert.match(html, /Замовити квитки/);
-  assert.match(html, /4 липня/);
+  assert.match(html, /Кавер-гурт із Мюнхена/);
+  assert.match(html, /Наступний концерт — незабаром/);
   assert.match(html, /window\.OrderLang = 'uk'/);
 });
 
@@ -68,13 +72,15 @@ test("Ukrainian switcher shows 'UA' label but keeps technical code 'uk'", () => 
   assert.doesNotMatch(html, /hreflang="ua"/);
 });
 
-test("past setlist (not the upcoming event) renders inside the setlist modal", () => {
+test("latest past show's setlist (July 2026) renders inside the setlist modal", () => {
   const html = read("index.html");
   assert.match(html, /id="setlistModal"/);
-  assert.match(html, /Сетлист · январь 2026/);
-  // "Медведица" is only in the January setlist, never in the upcoming repertoire,
-  // and must appear after the setlist modal opening (i.e. inside it).
-  assert.match(html, /id="setlistModal"[\s\S]*Медведица/);
+  assert.match(html, /Сетлист · июль 2026/);
+  // "Пошлая Молли" is only in the July setlist and must appear after the
+  // setlist modal opening (i.e. inside it).
+  assert.match(html, /id="setlistModal"[\s\S]*Пошлая Молли/);
+  assert.match(html, /Taylor Swift - Romeo &amp; Juliet/); // Nunjucks autoescapes &
+  assert.doesNotMatch(html, /Сетлист · январь 2026/);
 });
 
 test("order i18n is injected per language", () => {
@@ -164,23 +170,22 @@ test("no generated page links to index.html (only the clean canonical / )", () =
   assert.deepStrictEqual(offenders, [], "links to index.html found:\n" + offenders.join("\n"));
 });
 
-test("each language page embeds valid MusicEvent JSON-LD", () => {
+test("between gigs, each language page embeds MusicGroup (not MusicEvent) JSON-LD", () => {
   const cases = [
-    ["index.html", "ru", "https://boodney.band/"],
-    ["en.html", "en", "https://boodney.band/en.html"],
-    ["de.html", "de", "https://boodney.band/de.html"],
-    ["uk.html", "uk", "https://boodney.band/uk.html"],
+    ["index.html", "https://boodney.band/"],
+    ["en.html", "https://boodney.band/en.html"],
+    ["de.html", "https://boodney.band/de.html"],
+    ["uk.html", "https://boodney.band/uk.html"],
   ];
-  for (const [file, code, url] of cases) {
+  for (const [file, url] of cases) {
     const m = read(file).match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
     assert.ok(m, file + " has a JSON-LD block");
     const ld = JSON.parse(m[1]); // throws if malformed
-    assert.strictEqual(ld["@type"], "MusicEvent", file + " @type");
+    assert.strictEqual(ld["@type"], "MusicGroup", file + " @type");
+    assert.strictEqual(ld.name, "Boodney", file + " name");
     assert.strictEqual(ld.url, url, file + " url is canonical");
-    assert.strictEqual(ld.inLanguage, code, file + " inLanguage");
-    assert.strictEqual(ld.startDate, "2026-07-04T19:30:00+02:00", file + " DST-aware startDate");
-    assert.strictEqual(ld.location.address.addressLocality, "München", file + " locality");
-    assert.strictEqual(ld.offers.priceCurrency, "EUR", file + " currency");
+    assert.deepStrictEqual(ld.sameAs, ["https://www.instagram.com/boodney_official/"], file + " sameAs");
+    assert.deepStrictEqual(ld.image, ["https://boodney.band/assets/img/boodney-logo.jpg"], file + " image");
   }
 });
 

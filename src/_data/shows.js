@@ -75,5 +75,11 @@ module.exports = function () {
     .sort((a, b) => b.date.localeCompare(a.date));
   const upcoming = events.filter((e) => e.date >= today)[0] || null;
 
-  return { all: events, past, upcoming, lastPast: past[0] || null };
+  return {
+    all: events,
+    past,
+    upcoming,
+    lastPast: past[0] || null,
+    currentYear: Number(today.slice(0, 4)),
+  };
 };

@@ -6,26 +6,34 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="icon" href="/favicon.ico" sizes="any" />
+{% if event %}
 {% set pageTitle = site.name + " - " + event.dayMonth[lang.code] + " " + (event.year | string) + ", München" %}
-{% set canonical = site.url + lang.href %}
+{% set metaDesc = t.metaDescription %}
 {% set ogImage = site.url + "/assets/img/" + event.poster %}
+{% else %}
+{% set pageTitle = site.name + " — " + t.tagline %}
+{% set metaDesc = t.genericDescription %}
+{% set ogImage = site.url + "/assets/img/boodney-logo.jpg" %}
+{% endif %}
+{% set canonical = site.url + lang.href %}
 <title>{{ pageTitle }}</title>
-<meta name="description" content="{{ t.metaDescription }}" />
+<meta name="description" content="{{ metaDesc }}" />
 <link rel="canonical" href="{{ canonical }}" />
 {% for l in languages %}<link rel="alternate" hreflang="{{ l.code }}" href="{{ site.url }}{{ l.href }}" />
 {% endfor %}<link rel="alternate" hreflang="x-default" href="{{ site.url }}/" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="{{ site.name }}" />
 <meta property="og:title" content="{{ pageTitle }}" />
-<meta property="og:description" content="{{ t.metaDescription }}" />
+<meta property="og:description" content="{{ metaDesc }}" />
 <meta property="og:url" content="{{ canonical }}" />
 <meta property="og:locale" content="{{ lang.locale }}" />
 <meta property="og:image" content="{{ ogImage }}" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="{{ pageTitle }}" />
-<meta name="twitter:description" content="{{ t.metaDescription }}" />
+<meta name="twitter:description" content="{{ metaDesc }}" />
 <meta name="twitter:image" content="{{ ogImage }}" />
-{% set eventLd = {
+{% if event %}
+{% set pageLd = {
   "@context": "https://schema.org",
   "@type": "MusicEvent",
   "name": pageTitle,
@@ -58,7 +66,18 @@
     "url": canonical
   }
 } %}
-<script type="application/ld+json">{{ eventLd | dump | safe }}</script>
+{% else %}
+{% set pageLd = {
+  "@context": "https://schema.org",
+  "@type": "MusicGroup",
+  "name": "Boodney",
+  "description": t.genericDescription,
+  "url": canonical,
+  "image": [ogImage],
+  "sameAs": [site.instagram.url]
+} %}
+{% endif %}
+<script type="application/ld+json">{{ pageLd | dump | safe }}</script>
 <link rel="stylesheet" href="/assets/fonts/fonts.css" />
 <link rel="stylesheet" href="/assets/css/styles.css" />
 </head>
@@ -70,12 +89,13 @@
     <br>{{ t.disclaimer.line2 }}
     <br>{{ t.disclaimer.line3 }}</p>
   </div>
-  <div class="meta">© {{ event.year }} {{ site.name }} · München · <a class="impressum" href="/impressum.html">Impressum</a> · <a class="impressum" href="/datenschutz.html">Datenschutz</a></div>
+  <div class="meta">© {{ shows.currentYear }} {{ site.name }} · München · <a class="impressum" href="/impressum.html">Impressum</a> · <a class="impressum" href="/datenschutz.html">Datenschutz</a></div>
 </footer>
 <script>
   window.OrderLang = '{{ lang.code }}';
   window.OrderI18n = {{ t.order | dump | safe }};
 </script>
+{# order.js also drives the setlist modal; each feature no-ops when its modal is absent #}
 <script src="/assets/js/order.js" defer></script>
 </body>
 </html>

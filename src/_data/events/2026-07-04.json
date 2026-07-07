@@ -16,5 +16,42 @@
     "Imagine Dragons", "Мумий Тролль", "Земфира", "Король и Шут",
     "Sia", "Luis Fonsi", "Кино", "Nirvana", "Limp Bizkit",
     "Måneskin", "Моя Мишель"
-  ]
+  ],
+  "setlist": {
+    "parts": [
+      { "id": "part1", "songs": [
+        "Imagine Dragons - Believer",
+        "The White Stripes - Seven Nation Army",
+        "Alice Merton - No Roots",
+        "The Killers - Somebody Told Me + Mr. Brightside (mash up)",
+        "Kings of Leon - Sex on Fire",
+        "Маша и Медведи - Земля",
+        "Земфира - Хочешь",
+        "Земфира - Искала",
+        "Валентин Стрыкало - Наше лето",
+        "Кино - мэш ап",
+        "Мумий Тролль - Медведица"
+      ]},
+      { "id": "part2", "songs": [
+        "Papa Roach - Between Angels and Insects",
+        "Missy Elliott - Lose Control + Грибы - Тает лёд + Meghan Trainor - All About That Bass (mash up)",
+        "Luis Fonsi - Despacito + Flo Rida - Whistle + Roxette - Listen to Your Heart + Lady Gaga - Alejandro + P!nk - Try + Taylor Swift - Romeo & Juliet (mash up)",
+        "Sia - Chandelier + Linkin Park - Numb + John Newman - Love Me Again + KISS - I Was Made for Lovin' You + fun. - We Are Young + Katy Perry - Roar (mash up)",
+        "Radiohead - Creep",
+        "The Offspring - The Kids Aren't Alright",
+        "Limp Bizkit - Rollin'",
+        "Пошлая Молли - Любимая песня твоей сестры",
+        "Линда - Мало огня",
+        "Моя Мишель - Зима в сердце",
+        "Король и Шут - Лесник",
+        "The Cranberries - Zombie (+ мэш ап)"
+      ]},
+      { "id": "encore", "songs": [
+        "Надежда Кадышева - Веночек / Підманула",
+        "Nirvana - Smells Like Teen Spirit",
+        "Король и Шут - Кукла колдуна",
+        "Мумий Тролль - Владивосток 2000"
+      ]}
+    ]
+  }
 }
