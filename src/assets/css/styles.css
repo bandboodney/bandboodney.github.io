@@ -438,6 +438,33 @@ h1 .year {
 .modal-submit:hover:not(:disabled) { background: #ffffff; }
 .modal-submit:disabled { opacity: 0.5; cursor: not-allowed; }
 
+/* ---------- between gigs (no upcoming event) ---------- */
+.tagline {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.5;
+  color: var(--fg);
+}
+.next-show {
+  margin: 6px 0 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+.contact-line {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #cfcfcf;
+}
+.contact-line .email {
+  display: inline-block;
+  border-bottom: 1px solid var(--line-strong);
+  padding-bottom: 1px;
+  transition: border-color 0.15s ease;
+}
+.contact-line .email:hover { border-color: var(--fg); }
+
 /* ---------- instagram ---------- */
 .social {
   margin-top: 4px;

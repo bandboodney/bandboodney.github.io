@@ -12,12 +12,20 @@ layout: layouts/base.njk
 
 <main>
   <div class="poster-wrap">
+    {% if event %}
     <img class="poster" src="/assets/img/{{ event.poster }}" alt="{{ t.posterAlt }} {{ site.name }} — {{ event.dayMonth[lang.code] }} {{ event.year }}" />
+    {% else %}
+    <img class="poster" src="/assets/img/boodney-logo.jpg" alt="{{ t.logoAlt }}" />
+    {% endif %}
   </div>
 
   <section class="info">
     <div class="title-row">
+      {% if event %}
       <h1>{{ event.dayMonth[lang.code] }}<br /><span class="year">{{ event.year }}</span></h1>
+      {% else %}
+      <h1>{{ site.name }}</h1>
+      {% endif %}
       <div class="lang" role="group" aria-label="Language">
         {% for l in languages %}
         <a href="{{ l.href }}"{% if l.code == lang.code %} class="active" aria-current="page"{% endif %} lang="{{ l.code }}" hreflang="{{ l.code }}">{{ l.label or (l.code | upper) }}</a>
@@ -25,6 +33,7 @@ layout: layouts/base.njk
       </div>
     </div>
 
+    {% if event %}
     <dl class="details">
       <dt>{{ t.venue }}</dt>
       <dd>
@@ -63,6 +72,22 @@ layout: layouts/base.njk
       <p>{{ t.paypalNote }}</p>
       <p>{{ t.questionsLine }} <a class="email" href="mailto:{{ site.email }}">{{ site.email }}</a>.</p>
     </div>
+    {% else %}
+    <div class="between">
+      <p class="tagline">{{ t.tagline }}</p>
+      <p class="next-show">{{ t.nextShow }}</p>
+      {% if last %}
+      <button type="button" class="setlist-link" data-open-setlist>
+        <span class="setlist-link-text">{{ t.setlistLink }}</span>
+        <span class="arrow" aria-hidden="true">→</span>
+      </button>
+      {% endif %}
+    </div>
+
+    <div class="divider"></div>
+
+    <p class="contact-line">{{ t.questionsLine }} <a class="email" href="mailto:{{ site.email }}">{{ site.email }}</a>.</p>
+    {% endif %}
 
     <div class="social">
       <a class="ig-link" href="{{ site.instagram.url }}" target="_blank" rel="noopener">
@@ -97,6 +122,7 @@ layout: layouts/base.njk
 </div>
 {% endif %}
 
+{% if event %}
 <div class="modal-backdrop" id="orderModal" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="orderModalTitle">
   <div class="modal" role="document">
     <button type="button" class="modal-close" aria-label="{{ t.close }}">&times;</button>
@@ -120,3 +146,4 @@ layout: layouts/base.njk
     </form>
   </div>
 </div>
+{% endif %}

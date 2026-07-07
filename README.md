@@ -42,6 +42,17 @@ The layout also embeds a `MusicEvent` JSON-LD block for the upcoming show
 structured address parts (`street`/`postalCode`/`city`/`country`) live on the
 event's `venue` in `src/_data/events/*.json`.
 
+## Between-gigs mode
+
+Once the last event date passes, `shows.upcoming` becomes `null` and the site
+switches automatically to a holding page: band logo instead of the poster,
+generic per-language title/description, `MusicGroup` JSON-LD instead of
+`MusicEvent`, and no order flow (the order modal, price and venue blocks live
+inside `{% if event %}` branches). The setlist modal keeps showing the latest
+past show. To announce the next concert, add a new
+`src/_data/events/YYYY-MM-DD.json` with a future `date` — everything (details,
+tickets, `MusicEvent` JSON-LD) reactivates on the next build.
+
 ## Deploy
 
 Push to `main`; the GitHub Actions workflow builds and deploys automatically.
