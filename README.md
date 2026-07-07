@@ -12,7 +12,10 @@ and deployed to GitHub Pages.
 
 ## Add or update a concert
 
-1. Add a file under `src/_data/events/` named `YYYY-MM-DD.json`.
+1. Run `npm run new-event -- YYYY-MM-DD` — it scaffolds
+   `src/_data/events/YYYY-MM-DD.json` prefilled from the most recent event
+   (venue, times, price, repertoire) and prints the remaining steps. Or add
+   the file by hand:
    - **Upcoming:** include `venue`, `doorsOpen`, `startTime`, `price`, `poster`,
      `repertoire`. **Do not** include `setlist` — it stays a surprise.
    - **Past:** after the gig, add a `setlist`. The most recent past event's setlist
