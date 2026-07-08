@@ -94,8 +94,9 @@
 <script>
   window.OrderLang = '{{ lang.code }}';
   window.OrderI18n = {{ t.order | dump | safe }};
+  {% if not event %}window.OrderI18n.success = {{ t.subscribe.success | dump | safe }};{% endif %}
 </script>
-{# order.js also drives the setlist modal; each feature no-ops when its modal is absent #}
+{# order.js drives the order/subscribe form and the setlist modal; each no-ops when its modal is absent #}
 <script src="/assets/js/order.js" defer></script>
 </body>
 </html>

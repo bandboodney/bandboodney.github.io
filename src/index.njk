@@ -76,6 +76,7 @@ layout: layouts/base.njk
     <div class="between">
       <p class="tagline">{{ t.tagline }}</p>
       <p class="next-show">{{ t.nextShow }}</p>
+      <button type="button" class="order-btn subscribe-btn" data-open-order>{{ t.subscribe.btn }}</button>
       {% if last %}
       <button type="button" class="setlist-link" data-open-setlist>
         <span class="setlist-link-text">{{ t.setlistLink }}</span>
@@ -128,28 +129,34 @@ layout: layouts/base.njk
 </div>
 {% endif %}
 
-{% if event %}
+{# With an upcoming event this is the ticket-order form; between gigs it is a
+   news-subscription form reusing the same markup, order.js and Apps Script
+   backend — the hidden tickets=1 input satisfies client and server validation. #}
 <div class="modal-backdrop" id="orderModal" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="orderModalTitle">
   <div class="modal" role="document">
     <button type="button" class="modal-close" aria-label="{{ t.close }}">&times;</button>
-    <h3 id="orderModalTitle">{{ t.orderTitle }}</h3>
+    <h3 id="orderModalTitle">{{ t.orderTitle if event else t.subscribe.title }}</h3>
     <form class="order-form" novalidate>
       <label class="field">
         <span class="field-label">{{ t.emailLabel }}</span>
         <input type="email" name="email" required autocomplete="email" placeholder="you@example.com" />
       </label>
+      {% if event %}
       <label class="field">
         <span class="field-label">{{ t.ticketsLabel }}</span>
         <input type="number" name="tickets" required min="1" max="10" step="1" value="1" inputmode="numeric" />
       </label>
+      {% else %}
+      <input type="hidden" name="tickets" value="1" />
+      {% endif %}
       <input type="text" name="website" tabindex="-1" autocomplete="off" class="honeypot" aria-hidden="true" />
-      <p class="modal-notice">{{ t.modalNotice.before }}<a href="/datenschutz.html">{{ t.modalNotice.link }}</a>{{ t.modalNotice.after }}</p>
+      {% set notice = t.modalNotice if event else t.subscribe.notice %}
+      <p class="modal-notice">{{ notice.before }}<a href="/datenschutz.html">{{ notice.link }}</a>{{ notice.after }}</p>
       <div class="modal-error" role="alert" hidden></div>
       <div class="modal-success" role="status" hidden></div>
       <div class="modal-actions">
-        <button type="submit" class="modal-submit">{{ t.submitBtn }}</button>
+        <button type="submit" class="modal-submit">{{ t.submitBtn if event else t.subscribe.submitBtn }}</button>
       </div>
     </form>
   </div>
 </div>
-{% endif %}

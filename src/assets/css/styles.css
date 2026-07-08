@@ -464,6 +464,11 @@ h1 .year {
   transition: border-color 0.15s ease;
 }
 .contact-line .email:hover { border-color: var(--fg); }
+/* subscribe CTA reuses .order-btn but stacks on its own line */
+.subscribe-btn {
+  display: block;
+  margin: 18px 0 2px;
+}
 
 /* ---------- social (instagram, tiktok) ---------- */
 .social {

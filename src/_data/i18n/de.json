@@ -3,6 +3,17 @@
   "genericDescription": "Boodney — Coverband aus München. Die Hits, die du kennst und liebst, live. Nächstes Konzert — bald.",
   "tagline": "Coverband aus München",
   "nextShow": "Nächstes Konzert — bald",
+  "subscribe": {
+    "btn": "News abonnieren",
+    "title": "News abonnieren",
+    "submitBtn": "Abonnieren",
+    "success": "Danke! Wir schreiben dir, sobald das nächste Konzert feststeht.",
+    "notice": {
+      "before": "Deine E-Mail wird nur für Konzert-Ankündigungen verwendet. Mehr dazu in der ",
+      "link": "Datenschutzerklärung",
+      "after": "."
+    }
+  },
   "logoAlt": "Logo der Band Boodney",
   "posterAlt": "Konzertplakat",
   "venue": "Veranstaltungsort",

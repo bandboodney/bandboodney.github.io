@@ -3,6 +3,17 @@
   "genericDescription": "Boodney — a cover band from Munich. The hits you know and love, live. Next concert coming soon.",
   "tagline": "Cover band from Munich",
   "nextShow": "Next concert — coming soon",
+  "subscribe": {
+    "btn": "Subscribe to news",
+    "title": "Subscribe to news",
+    "submitBtn": "Subscribe",
+    "success": "Thanks! We'll email you when the next concert is announced.",
+    "notice": {
+      "before": "Your email is used only for concert announcements. Learn more in our ",
+      "link": "privacy policy",
+      "after": "."
+    }
+  },
   "logoAlt": "Boodney band logo",
   "posterAlt": "Concert poster",
   "venue": "Venue",
