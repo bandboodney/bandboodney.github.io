@@ -40,10 +40,17 @@ test("RU homepage renders the between-gigs state (no upcoming event)", () => {
   assert.match(html, /Кавер-группа из Мюнхена/);
   assert.match(html, /Следующий концерт — скоро/);
   assert.match(html, /boodney-logo\.jpg/);
-  // no stale event content: no order flow, no venue block
-  // (the footer disclaimer still names the «Заказать билеты» form — that's legal text)
-  assert.doesNotMatch(html, /class="order-btn"|data-open-order|id="orderModal"/);
+  // the order form is reused as a news-subscription form between gigs
+  assert.match(html, /data-open-order[^>]*>Подписаться на новости</);
+  assert.match(html, /id="orderModal"/);
+  assert.match(html, /Подписка на новости/); // modal title
+  assert.match(html, /window\.OrderI18n\.success = "Спасибо! Мы напишем/);
+  // subscribe form drops the ticket-count field (hidden tickets=1 instead)
+  assert.doesNotMatch(html, /name="tickets"[^>]*type="number"|type="number"[^>]*name="tickets"/);
+  assert.match(html, /<input type="hidden" name="tickets" value="1"/);
+  // no stale event content: no price/venue announcement
   assert.doesNotMatch(html, /Kulturzentrum Gorod/);
+  assert.doesNotMatch(html, /class="price"/);
 });
 
 test("EN and DE pages render their own language", () => {
